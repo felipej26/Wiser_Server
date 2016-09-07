@@ -95,7 +95,7 @@ module.exports.connections = {
 		user: process.env.OPENSHIFT_MYSQL_DB_USERNAME || 'root',
 		password: process.env.OPENSHIFT_MYSQL_DB_PASSWORD || 'root',
 		port: process.env.OPENSHIFT_MYSQL_DB_PORT || 3306,
-		database: 'nodejssails'
+		database: 'nodejs'
 	}
 
 };

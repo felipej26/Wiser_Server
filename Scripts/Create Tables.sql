@@ -79,24 +79,24 @@ CREATE TABLE `user` (
 
 -- Tratamento para o banco aceitar emoticons, porém, é preciso tratar também na aplicação.
 SET NAMES utf8mb4;
-ALTER DATABASE nodejssails CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+ALTER DATABASE `nodejs` CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
-ALTER TABLE user CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-ALTER TABLE user CHANGE STATUS STATUS VARCHAR(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
-REPAIR TABLE user;
-OPTIMIZE TABLE user;
+ALTER TABLE `user` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE `user` CHANGE `status` `status` VARCHAR(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+REPAIR TABLE `user`;
+OPTIMIZE TABLE `user`;
 
-ALTER TABLE discussao CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-ALTER TABLE discussao CHANGE titulo titulo VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
-REPAIR TABLE discussao;
-OPTIMIZE TABLE discussao;
+ALTER TABLE `discussao` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE `discussao` CHANGE `titulo` `titulo` VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+REPAIR TABLE `discussao`;
+OPTIMIZE TABLE `discussao`;
 
-ALTER TABLE discussao CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-ALTER TABLE discussao CHANGE descricao descricao VARCHAR(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
-REPAIR TABLE discussao;
-OPTIMIZE TABLE discussao;
+ALTER TABLE `discussao` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE `discussao` CHANGE `descricao` `descricao` VARCHAR(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+REPAIR TABLE `discussao`;
+OPTIMIZE TABLE `discussao`;
 
-ALTER TABLE discussao_resposta CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-ALTER TABLE discussao_resposta CHANGE resposta resposta VARCHAR(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
-REPAIR TABLE discussao_resposta;
-OPTIMIZE TABLE discussao_resposta;
+ALTER TABLE `discussao_resposta` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE `discussao_resposta` CHANGE `resposta` `resposta` VARCHAR(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+REPAIR TABLE `discussao_resposta`;
+OPTIMIZE TABLE `discussao_resposta`;
