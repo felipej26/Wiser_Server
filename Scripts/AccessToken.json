@@ -1,0 +1,8 @@
+POST/ http://nodejssails-wiserserver.rhcloud.com/AccessToken
+
+{
+    "accessToken" : "570854019757986|wlsnDSdcWhFs586zho4_dgJtc18",
+    "appID" : "570854019757986",
+    "userID" : "1262642377098040",
+    "permissions" : "public_profile,user_friends"
+}

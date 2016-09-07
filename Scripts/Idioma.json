@@ -1,0 +1,24 @@
+POST/ http://nodejssails-wiserserver.rhcloud.com/Idioma
+
+[
+    {
+        "linguagem" : "pt-br",
+        "cod_idioma" : 1,
+        "descricao" : "Inglês"
+    },
+    {
+        "linguagem" : "en",
+        "cod_idioma" : 1,
+        "descricao" : "English"
+    },
+    {
+        "linguagem" : "pt_br",
+        "cod_idioma" : 2,
+        "descricao" : "Espanhol"
+    },
+    {
+        "linguagem" : "en",
+        "cod_idioma" : 2,
+        "descricao" : "Spanish"
+    }
+]
