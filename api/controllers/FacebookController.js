@@ -1,5 +1,5 @@
 /**
- * AccessTokenController.js
+ * FacebookController.js
  *
  * @description :: Server-side logic for managing Testapis
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
@@ -7,7 +7,7 @@
 
 module.exports = {
     getAccessToken: function(req, res) {
-        AccessToken.findOne({
+        Facebook.findOne({
             id: 1
         }).exec(function (err, accessToken){
             if (err) {

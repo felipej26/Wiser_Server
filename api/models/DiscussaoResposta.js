@@ -11,7 +11,7 @@ module.exports = {
 	
 	attributes: {
 		user: {
-			model: 'User',
+			model: 'Usuario',
 			required: true
 		},
 		

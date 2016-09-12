@@ -1,12 +1,12 @@
 /**
- * UserController
+ * UsuarioController.js
  *
  * @description :: Server-side logic for managing Testapis
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
 module.exports = {
-	updateOrCreateUser: function(req, res) {
+	updateOrCreate: function(req, res) {
         var facebook_id = req.param('facebook_id');
 
         if (!facebook_id) {
@@ -23,25 +23,25 @@ module.exports = {
             longitude: req.param('longitude')
         };
 
-        User.findOrCreate({
+        Usuario.findOrCreate({
             facebook_id: facebook_id
         }, values)
-        .then(function cb(user) {
+        .then(function cb(usuario) {
             
-            User.update({
-                id: user.id 
+            Usuario.update({
+                id: usuario.id 
             }, {
                 data_ultimo_acesso: values.data_ultimo_acesso,
                 latitude: values.latitude,
                 longitude: values.longitude,
                 conta_ativa: true
-            }).then(function (updatedUser) {
-                User.findOne({
-                    id: user.id
-                }).exec(function(err, user) {
-                    if (err) { return res.serverError(err); }
+            }).then(function (updatedUsuario) {
+                Usuario.findOne({
+                    id: usuario.id
+                }).exec(function(err, usuario) {
+                    if (err) { return res.json(err); }
 
-                    res.json(user);
+                    res.json(usuario);
                 });
             });
         }).catch(function cbError(err) {
@@ -62,38 +62,39 @@ module.exports = {
             });
         }
         
-        User.update({
+        Usuario.update({
             id: id
         }, {
             idioma: req.param('idioma'),
             fluencia: req.param('fluencia'),
             status: req.param('status'),
             setou_configuracoes: true
-        }).exec(function(err, user) {
-            if (err) { return res.serverError(err); }
+        }).exec(function(err, usuario) {
+            if (err) { return res.json(err); }
             
-            return res.json(user);
+            return res.json(usuario);
         });
     },
 
     desativarConta: function(req, res) {
-        var id = req.param('id');
         
-        if (!id) {
+        if (!req.param('id')) {
             return res.json(400, {
                 result: 'BAD_REQUEST',
-                reason: 'ID inválido: ' + id
+                reason: 'Parametros Invalidos (id)'
             });
         }
         
-        User.update({
+        var id = req.param('id');
+
+        Usuario.update({
             id: id
         }, {
             conta_ativa: false
-        }).exec(function(err, user) {
-            if (err) { return res.serverError(err); }
+        }).exec(function(err, usuario) {
+            if (err) { return res.json(err); }
             
-            return res.json(user);
+            return res.json(usuario);
         });
     },
 
@@ -115,7 +116,7 @@ module.exports = {
 			' *PI()/180)*SIN(latitude*PI()/180) + COS( ' + latitude +
 			' *PI()/180)*COS(latitude*PI()/180)*COS(longitude*PI()/180 -' + longitude +
 			' *PI()/180)), 0) AS distancia' +
-            ' FROM user' +
+            ' FROM usuario' +
             ' WHERE conta_ativa = 1 AND setou_configuracoes = 1' +
             ' AND id <> \'' + id + '\'';
 
@@ -128,7 +129,7 @@ module.exports = {
         query += ' HAVING distancia <= ' + distancia +
         ' ORDER BY distancia;';
         
-        User.query(query, function cb(err, users) {
+        Usuario.query(query, function cb(err, usuarios) {
             if (err) {
                 res.json(500, {
                     result: 'ERROR', 
@@ -136,17 +137,17 @@ module.exports = {
                 });
             }
             else {
-                var userIds = [];
-                users.forEach(function(user) {
-                    userIds.push(user.id);
+                var usuarioIds = [];
+                usuarios.forEach(function(usuario) {
+                    usuarioIds.push(usuario.id);
                 });
 
-                User.find({
-                    id: userIds
-                }).exec(function (err, usersResult) {
+                Usuario.find({
+                    id: usuarioIds
+                }).exec(function (err, usuariosResult) {
                     if (err) { return res.serverError(err); }
 
-                    return res.json(usersResult);
+                    return res.json(usuariosResult);
                 });
             }
         });

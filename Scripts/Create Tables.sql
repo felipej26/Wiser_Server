@@ -1,73 +1,97 @@
-CREATE TABLE `accesstoken` (
-  `accessToken` varchar(50) DEFAULT NULL,
-  `appID` varchar(20) DEFAULT NULL,
-  `userID` varchar(20) DEFAULT NULL,
-  `permissions` varchar(100) DEFAULT NULL,
+CREATE TABLE `conversa` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `createdAt` datetime DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `conversa_mensagem` (
+  `conversa` int(11) DEFAULT NULL,
+  `usuario` int(11) DEFAULT NULL,
+  `data` datetime DEFAULT NULL,
+  `lida` tinyint(1) DEFAULT NULL,
+  `mensagem` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `createdAt` datetime DEFAULT NULL,
+  `updatedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `conversa_usuario` (
+  `conversa` int(11) DEFAULT NULL,
+  `usuario` int(11) DEFAULT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `createdAt` datetime DEFAULT NULL,
+  `updatedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `discussao` (
-  `user` int(11) DEFAULT NULL,
-  `titulo` varchar(30) DEFAULT NULL,
-  `descricao` varchar(250) DEFAULT NULL,
+  `usuario` int(11) DEFAULT NULL,
+  `titulo` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `descricao` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `data` datetime DEFAULT NULL,
   `discussao_ativa` tinyint(1) DEFAULT NULL,
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `createdAt` datetime DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `discussao_resposta` (
   `user` int(11) DEFAULT NULL,
   `discussao` int(11) DEFAULT NULL,
   `data` datetime DEFAULT NULL,
-  `resposta` varchar(250) DEFAULT NULL,
+  `resposta` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `createdAt` datetime DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `facebook` (
+  `accessToken` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `appID` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `userID` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `permissions` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `fluencia` (
-  `linguagem` varchar(5) DEFAULT NULL,
+  `linguagem_id` int(11) DEFAULT NULL,
   `nivel` int(11) DEFAULT NULL,
-  `descricao` varchar(30) DEFAULT NULL,
+  `descricao` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `idioma` (
-  `linguagem` varchar(5) DEFAULT NULL,
+  `linguagem_id` int(11) DEFAULT NULL,
   `cod_idioma` int(11) DEFAULT NULL,
-  `descricao` varchar(30) DEFAULT NULL,
+  `disponivel` tinyint(1) DEFAULT NULL,
+  `descricao` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `mensagens` (
-  `user` int(11) DEFAULT NULL,
-  `destinatario` int(11) DEFAULT NULL,
-  `data` datetime DEFAULT NULL,
-  `lida` tinyint(1) DEFAULT NULL,
-  `mensagem` varchar(250) DEFAULT NULL,
+CREATE TABLE `linguagem` (
+  `chave` varchar(5) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `is_default` tinyint(1) DEFAULT NULL,
+  `disponivel` tinyint(1) DEFAULT NULL,
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `createdAt` datetime DEFAULT NULL,
-  `updatedAt` datetime DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `chave` (`chave`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `user` (
-  `facebook_id` varchar(30) DEFAULT NULL,
+CREATE TABLE `usuario` (
+  `facebook_id` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `data_ultimo_acesso` datetime DEFAULT NULL,
   `latitude` float DEFAULT NULL,
   `longitude` float DEFAULT NULL,
   `idioma` int(11) DEFAULT NULL,
   `fluencia` int(11) DEFAULT NULL,
-  `status` varchar(30) DEFAULT NULL,
+  `status` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `conta_ativa` tinyint(1) DEFAULT NULL,
   `setou_configuracoes` tinyint(1) DEFAULT NULL,
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -75,23 +99,26 @@ CREATE TABLE `user` (
   `updatedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `facebook_id` (`facebook_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 
 -- Tratamento para o banco aceitar emoticons, porém, é preciso tratar também na aplicação.
+
 SET NAMES utf8mb4;
 ALTER DATABASE `nodejs` CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
-ALTER TABLE `user` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-ALTER TABLE `user` CHANGE `status` `status` VARCHAR(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
-REPAIR TABLE `user`;
-OPTIMIZE TABLE `user`;
+ALTER TABLE `usuario` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE `usuario` CHANGE `status` `status` VARCHAR(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+REPAIR TABLE `usuario`;
+OPTIMIZE TABLE `usuario`;
+
+ALTER TABLE `conversa_mensagem` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE `conversa_mensagem` CHANGE `mensagem` `mensagem` VARCHAR(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+REPAIR TABLE `conversa_mensagem`;
+OPTIMIZE TABLE `conversa_mensagem`;
 
 ALTER TABLE `discussao` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ALTER TABLE `discussao` CHANGE `titulo` `titulo` VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
-REPAIR TABLE `discussao`;
-OPTIMIZE TABLE `discussao`;
-
-ALTER TABLE `discussao` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 ALTER TABLE `discussao` CHANGE `descricao` `descricao` VARCHAR(250) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
 REPAIR TABLE `discussao`;
 OPTIMIZE TABLE `discussao`;

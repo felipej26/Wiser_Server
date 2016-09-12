@@ -8,8 +8,8 @@
 module.exports = {
 	
 	attributes: {
-		user: {
-			model: 'User',
+		usuario: {
+			model: 'Usuario',
 			required: true
 		},
 		
@@ -36,9 +36,9 @@ module.exports = {
 		},
 
 		respostas: {
-			required: false,
 			collection: 'DiscussaoResposta',
-			via: 'discussao'
+			via: 'discussao',
+			required: false
 		}
 	}
 };

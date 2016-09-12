@@ -1,5 +1,5 @@
 /**
- * DiscussaoController
+ * DiscussaoController.js
  *
  * @description :: Server-side logic for managing Testapis
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
@@ -20,7 +20,7 @@ module.exports = {
 
         var values = {
             id: id,
-            user: req.param('user'),
+            usuario: req.param('usuario'),
             titulo: req.param('titulo'),
             descricao: req.param('descricao'),
             data: req.param('data')
@@ -29,7 +29,7 @@ module.exports = {
         Discussao.findOrCreate({
             id: id
         }, values)
-        .then(function cb(discussao) {
+        .then(function (discussao) {
 
             Discussao.update({
                 id: discussao.id 
@@ -41,7 +41,7 @@ module.exports = {
                 Discussao.findOne({
                     id: discussao.id
                 }).exec(function(err, discussao) {
-                    if (err) { return res.serverError(err); }
+                    if (err) { return res.json(err); }
 
                     res.json(discussao);
                 });
@@ -70,29 +70,31 @@ module.exports = {
                 }
             }]
         })
-        .populate('user')
+        .populate('usuario')
         .populate('respostas')
         .exec(function(err, discussoes) {
-            if (err) return res.serverError(err);
+            if (err) { return res.json(err); }
 
             return res.json(discussoes);
         });
     },
 
     desativarDiscussao: function(req, res) {
-        var id = req.param('id');
 
-        if (!id) {
+        if (!req.param('id') || !req.param('desativar')) {
             return res.json(400, {
                 result: 'BAD_REQUEST',
-                reason: 'Parametros Inválidos!'
+                reason: 'Parametros Inválidos (id, desativar)'
             });
         }
+
+        var id = req.param('id');
+        var desativar = req.param('desativar') == 'true';
 
         Discussao.update({
             id: id
         }, {
-            discussao_ativa: false
+            discussao_ativa: desativar
         }).then(function(discussao) {
             return res.json(discussao);
         }).catch(function cbError(err) {
@@ -115,38 +117,39 @@ module.exports = {
 
         DiscussaoResposta.create({
             discussao: id,
-            user: req.param('user'),
+            usuario: req.param('usuario'),
             data: req.param('data'),
             resposta: req.param('resposta')
         }).exec(function(err, resposta) {
-            if (err) return res.serverError(err);
+            if (err) { return res.json(err); }
 
             return res.json(resposta);
         });
     },
 
     carregarDiscussoes: function(req, res) {
-        var user = req.param('user');
+        var usuario = req.param('usuario');
 
-        if (!user) {
-            Discussao.find()
-            .populate('user')
-            .populate('respostas')
+        if (!usuario) {
+            Discussao.find().where({
+                discussao_ativa: true
+            })
+            .populateAll()
             .sort('id DESC')
             .exec(function(err, discussoes) {
-                if (err) return res.serverError(err);
+                if (err) { return res.json(err); }
                 
                 return res.json(discussoes);
             });
         }
         else {
             Discussao.find().where({
-                user: user
-            }).populate('user')
-            .populate('respostas')
+                usuario: usuario
+            })
+            .populateAll()
             .sort('id DESC')
             .exec(function(err, discussoes) {
-                if (err) return res.serverError(err);
+                if (err) { return res.json(err); }
 
                 return res.json(discussoes);
             });

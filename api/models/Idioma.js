@@ -11,14 +11,22 @@ module.exports = {
 	autoUpdatedAt: false,
 	
 	attributes: {
-		linguagem: {
-			type: 'string',
-			required: true,
-			size: 5
+		linguagem_id: {
+			type: 'integer',
+			required: true
 		},
 		
 		cod_idioma: {
 			type: 'integer',
+			required: true
+		},
+		
+		/*
+		 * Indica que o idioma será mostrado nas Combos de Idiomas
+		 */
+		disponivel: {
+			type: 'boolean',
+			defaultsTo: false,
 			required: true
 		},
 
