@@ -80,8 +80,8 @@ module.exports = {
     },
 
     desativarDiscussao: function(req, res) {
-
-        if (!req.param('id') || !req.param('desativar')) {
+        
+        if (!req.param('id') || req.param('desativar') == 'undefined') {
             return res.json(400, {
                 result: 'BAD_REQUEST',
                 reason: 'Parametros Inválidos (id, desativar)'

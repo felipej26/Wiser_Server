@@ -8,7 +8,7 @@
 module.exports = {
 	getFluencias: function(req, res) {
 
-        if (!req.param('linguagem') || !req.param('todos')) {
+        if (!req.param('linguagem') || req.param('todos') == 'undefined') {
             return res.json(400, {
                 result: 'BAD_REQUEST',
                 reason: 'Parametros Invalidos (linguagem, todos)'
