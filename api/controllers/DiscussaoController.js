@@ -89,7 +89,7 @@ module.exports = {
         }
 
         var id = req.param('id');
-        var desativar = req.param('desativar') == 'true';
+        var desativar = req.param('desativar');
 
         Discussao.update({
             id: id
