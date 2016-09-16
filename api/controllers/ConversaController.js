@@ -38,6 +38,77 @@ module.exports = {
                 return res.json(conversas);
             });
         });
+    },
+
+    enviarMensagem: function(req, res) {
+        if (!req.param('conversa') || !req.param('usuario') || !req.param('destinatario') ||
+            !req.param('data') || !req.param('mensagem')) {
+            return res.json(400, {
+                result: 'BAD_REQUEST',
+                reason: 'Parametros Invalidos (conversa, usuario, destinatario, data, mensagem)'
+            });
+        }
+
+        var idConversa = req.param('conversa');
+        var idUsuario = req.param('usuario');
+        var idDestinatario = req.param('destinatario');
+        var data = req.param('data');
+        var mensagem = req.param('mensagem');
+
+        Conversa.findOrCreate({
+            id: idConversa
+        }).then(function (conversa) {
+
+            ConversaUsuario.findOrCreate({
+                conversa: conversa.id,
+                usuario: idUsuario
+            }, {
+                conversa: conversa.id,
+                usuario: idUsuario
+            }).then(function (conversa) {
+
+            }).catch(function cbError(err) {
+                return res.json(500, {
+                    result: 'BAD_REQUEST',
+                    reason: err
+                });
+            });
+
+            ConversaUsuario.findOrCreate({
+                conversa: conversa.id,
+                usuario: idDestinatario
+            }, {
+                conversa: conversa.id,
+                usuario: idDestinatario
+            }).then(function (conversa) {
+                
+            }).catch(function cbError(err) {
+                return res.json(500, {
+                    result: 'BAD_REQUEST',
+                    reason: err
+                });
+            });
+
+            ConversaMensagem.create({
+                conversa: conversa.id,
+                usuario: idUsuario,
+                data: data,
+                mensagem: mensagem
+            }).then(function (mensagem) {
+                return res.json(mensagem);
+            }).catch(function cbError(err) {
+                return res.json(500, {
+                    result: 'BAD_REQUEST',
+                    reason: err
+                });
+            });
+
+        }).catch(function cbError(err) {
+            return res.json(500, {
+                result: 'BAD_REQUEST',
+                reason: err
+            });
+        });
     }
 };
 

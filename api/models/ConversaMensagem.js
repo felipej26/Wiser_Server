@@ -27,22 +27,15 @@ module.exports = {
 		
 		lida: {
 			type: 'boolean',
-			required: true
+			required: true,
+			defaultsTo: false
 		},
 
 		mensagem: {
 			type: 'string',
 			required: true,
 			size: 250
-		},
-
-        toJSON: function() {
-            var obj = this.toObject();
-
-            delete obj.conversa;
-
-            return obj;
-        }
+		}
 	}
 };
 

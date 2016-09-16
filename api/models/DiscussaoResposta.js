@@ -10,7 +10,7 @@ module.exports = {
 	tableName: 'discussao_resposta',
 	
 	attributes: {
-		user: {
+		usuario: {
 			model: 'Usuario',
 			required: true
 		},

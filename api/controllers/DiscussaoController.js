@@ -80,7 +80,7 @@ module.exports = {
     },
 
     desativarDiscussao: function(req, res) {
-        
+
         if (!req.param('id') || req.param('desativar') == 'undefined') {
             return res.json(400, {
                 result: 'BAD_REQUEST',
@@ -108,10 +108,10 @@ module.exports = {
     responderDiscussao: function(req, res) {
         var id = req.param('id');
 
-        if (!id) {
+        if (!id || !req.param('usuario') || !req.param('data') || !req.param('resposta')) {
             return res.json(400, {
                 result: 'BAD_REQUEST',
-                reason: 'Parametros Inválidos!'
+                reason: 'Parametros Invalidos (id, usuario, data, resposta)'
             });
         }
 
