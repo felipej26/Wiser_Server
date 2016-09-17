@@ -73,7 +73,19 @@ module.exports = {
                     conversa: conversasIds,
                     usuario: destinatario
                 }).then(function(cEncontrada) {
-                    return res.json(cEncontrada);            
+                    Conversa.findOne({
+                        id: cEncontrada.id
+                    })
+                    .populate('mensagens')
+                    .then(function (cConversa) {
+                        console.log('cCOnversa: ' + cConversa);
+                        return res.json(cConversa);
+                    }).catch(function (err) {
+                        return res.json(500, {
+                            result: 'BAD_REQUEST',
+                            reason: err
+                        });
+                    });
                 }).catch(function cbError(err) {
                     return res.json(500, {
                         result: 'BAD_REQUEST',
