@@ -40,6 +40,55 @@ module.exports = {
         });
     },
 
+    carregarEspecifico: function(req, res) {
+        
+        if (!req.param('usuario') || !req.param('destinatario')) {
+            return res.json(400, {
+                result: 'BAD_REQUEST',
+                reason: 'Parametros Inválidos (usuario, destinatario)'
+            });
+        }
+
+        var usuario = req.param('usuario');
+        var destinatario = req.param('destinatario');
+
+        ConversaUsuario.find({
+            usuario: usuario
+        }).then(function(conversasUsuario) {
+            return conversasUsuario;
+        }).then(function(conversas) {
+
+            if (!conversas[0]) {
+                return;
+            }
+            else {
+                
+                var conversaEncontrada;
+                var conversasIds = [];
+                conversas.forEach(function(conversa) {
+                    conversasIds.push(conversa.id);
+                });
+
+                ConversaUsuario.findOne({
+                    conversa: conversasIds,
+                    usuario: destinatario
+                }).then(function(cEncontrada) {
+                    return res.json(cEncontrada);            
+                }).catch(function cbError(err) {
+                    return res.json(500, {
+                        result: 'BAD_REQUEST',
+                        reason: err
+                    });
+                });
+            }
+        }).catch(function cbError(err) {
+            return res.json(500, {
+                result: 'BAD_REQUEST',
+                reason: err
+            });
+        });
+    },
+
     enviarMensagem: function(req, res) {
         if (!req.param('conversa') || !req.param('usuario') || !req.param('destinatario') ||
             !req.param('data') || !req.param('mensagem')) {

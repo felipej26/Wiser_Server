@@ -9,7 +9,7 @@ CREATE TABLE `conversa_mensagem` (
   `conversa` int(11) DEFAULT NULL,
   `usuario` int(11) DEFAULT NULL,
   `data` datetime DEFAULT NULL,
-  `lida` tinyint(1) DEFAULT NULL,
+  `lida` tinyint(1) DEFAULT 0,
   `mensagem` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `createdAt` datetime DEFAULT NULL,
@@ -39,7 +39,7 @@ CREATE TABLE `discussao` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `discussao_resposta` (
-  `user` int(11) DEFAULT NULL,
+  `usuario` int(11) DEFAULT NULL,
   `discussao` int(11) DEFAULT NULL,
   `data` datetime DEFAULT NULL,
   `resposta` varchar(250) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
