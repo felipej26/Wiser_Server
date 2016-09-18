@@ -18,15 +18,7 @@ module.exports = {
         usuario: {
 			model: 'Usuario',
 			required: true
-		},
-
-        toJSON: function() {
-            var obj = this.toObject();
-
-            delete obj.conversa;
-
-            return obj;
-        }
+		}
     }
 };
 

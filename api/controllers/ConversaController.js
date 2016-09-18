@@ -55,7 +55,7 @@ module.exports = {
         ConversaUsuario.find({
             usuario: usuario
         }).then(function(conversasUsuario) {
-            
+
             if (!conversasUsuario[0]) {
                 return res.json(500, {
                     result: 'BAD_REQUEST',
@@ -66,27 +66,35 @@ module.exports = {
             return conversasUsuario;
         }).then(function(conversas) {
 
-            var conversaEncontrada;
+            if (!conversas[0]) {
+                return;
+            }
+
             var conversasIds = [];
             conversas.forEach(function(conversa) {
-                conversasIds.push(conversa.id);
+                conversasIds.push(conversa.conversa);
             });
 
             ConversaUsuario.findOne({
                 conversa: conversasIds,
                 usuario: destinatario
             }).then(function(cEncontrada) {
-                Conversa.findOne({
-                    id: cEncontrada.id
-                })
-                .populate('mensagens')
-                .then(function (cConversa) {
-                    return res.json(cConversa);
-                }).catch(function (err) {
+
+                if (!cEncontrada) {
                     return res.json(500, {
                         result: 'BAD_REQUEST',
-                        reason: err
+                        reason: 'Usuario não possui conversas com este destinatario'
                     });
+                }
+
+                Conversa.findOne({
+                    id: cEncontrada.conversa
+                })
+                .populate('mensagens')
+                .exec(function (err, cConversa) {
+                    if (err) { return res.serverError(err); }
+
+                    return res.json(cConversa);
                 });
             }).catch(function cbError(err) {
                 return res.json(500, {
