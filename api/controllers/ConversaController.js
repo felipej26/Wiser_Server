@@ -49,6 +49,7 @@ module.exports = {
     },
 
     enviarMensagem: function(req, res) {
+        
         if (!req.param('conversa') || !req.param('usuario') || !req.param('destinatario') ||
             !req.param('data') || !req.param('mensagem')) {
             return res.json(400, {
@@ -116,6 +117,37 @@ module.exports = {
                 result: 'BAD_REQUEST',
                 reason: err
             });
+        });
+    },
+
+    atualizarLidas: function(req, res) {
+        
+        if (!req.param('conversa') || !req.param('usuario') || !req.param('mensagem')) {
+            return res.json(400, {
+                result: 'BAD_REQUEST',
+                reason: 'Parametros Invalidos (conversa, usuario, mensagem)'
+            });
+        }
+
+        var conversa = req.param('conversa');
+        var usuario = req.param('usuario');
+        var lastMensagem = req.param('mensagem');
+
+        ConversaMensagem.update({
+            lida: false,
+            conversa: conversa,
+            usuario: {
+                '!': usuario
+            },
+            id: {
+                '<=': lastMensagem
+            }
+        }, {
+            lida: true
+        }).exec(function (err, mensagens) {
+            if (err) { return res.serverError(err); }
+
+            return res.send('SUCCESS');
         });
     }
 };

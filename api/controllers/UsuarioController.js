@@ -7,14 +7,15 @@
 
 module.exports = {
 	updateOrCreate: function(req, res) {
-        var facebook_id = req.param('facebook_id');
-
-        if (!facebook_id) {
+        
+        if (!req.param('facebook_id') || !req.param('data_ultimo_acesso') || !req.param('latitude') || !req.param('longitude')) {
             return res.json(400, {
                 result: 'BAD_REQUEST',
-                reason: 'Facebook iD inválido: ' + facebook_id
+                reason: 'Parametros invalidos (facebook_id, data_ultimo_acesso, latitude, longitude)'
             });
         }
+
+        var facebook_id = req.param('facebook_id');
 
         var values = {
             facebook_id: facebook_id,
@@ -53,14 +54,15 @@ module.exports = {
     },
 
     salvarConfiguracoes: function(req, res) {
-        var id = req.param('id');
 
-        if (!id) {
+        if (!req.param('id') || !req.param('idioma') || !req.param('fluencia') || !req.param('status')) {
             return res.json(400, {
                 result: 'BAD_REQUEST',
-                reason: 'ID inválido: ' + id
+                reason: 'Parametros invalidos (id, idioma, fluencia, status)'
             });
         }
+
+        var id = req.param('id');
         
         Usuario.update({
             id: id
