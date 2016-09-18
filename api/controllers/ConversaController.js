@@ -7,15 +7,17 @@
 
 module.exports = {
 	carregarConversas: function(req, res) {
-        var usuario = req.param('usuario');
-
-        if (!usuario) {
+        
+        if (!req.param('usuario') || !req.param('mensagem')) {
             return res.json(400, {
                 result: 'BAD_REQUEST',
-                reason: 'Parametros Inválidos (usuario)'
+                reason: 'Parametros Inválidos (usuario, mensagem)'
             });
         }
         
+        var usuario = req.param('usuario');
+        var lastMensagem = req.param('mensagem');
+
         ConversaUsuario.find({
             usuario: usuario
         })
@@ -31,81 +33,17 @@ module.exports = {
                 id: conversasIds
             })
             .populate('usuarios')
-            .populate('mensagens')
+            .populate('mensagens', {
+                where: {
+                    id: {
+                    '>': lastMensagem
+                    }
+                }
+            })
             .exec(function (err, conversas) {
                 if (err) { return res.serverError(err); }
 
                 return res.json(conversas);
-            });
-        });
-    },
-
-    carregarConversa: function(req, res) {
-        
-        if (!req.param('usuario') || !req.param('destinatario')) {
-            return res.json(400, {
-                result: 'BAD_REQUEST',
-                reason: 'Parametros Inválidos (usuario, destinatario)'
-            });
-        }
-
-        var usuario = req.param('usuario');
-        var destinatario = req.param('destinatario');
-
-        ConversaUsuario.find({
-            usuario: usuario
-        }).then(function(conversasUsuario) {
-
-            if (!conversasUsuario[0]) {
-                return res.json(500, {
-                    result: 'BAD_REQUEST',
-                    reason: 'Usuario não possui conversas'
-                });
-            }
-
-            return conversasUsuario;
-        }).then(function(conversas) {
-
-            if (!conversas[0]) {
-                return;
-            }
-
-            var conversasIds = [];
-            conversas.forEach(function(conversa) {
-                conversasIds.push(conversa.conversa);
-            });
-
-            ConversaUsuario.findOne({
-                conversa: conversasIds,
-                usuario: destinatario
-            }).then(function(cEncontrada) {
-
-                if (!cEncontrada) {
-                    return res.json(500, {
-                        result: 'BAD_REQUEST',
-                        reason: 'Usuario não possui conversas com este destinatario'
-                    });
-                }
-
-                Conversa.findOne({
-                    id: cEncontrada.conversa
-                })
-                .populate('mensagens')
-                .exec(function (err, cConversa) {
-                    if (err) { return res.serverError(err); }
-
-                    return res.json(cConversa);
-                });
-            }).catch(function cbError(err) {
-                return res.json(500, {
-                    result: 'BAD_REQUEST',
-                    reason: err
-                });
-            });
-        }).catch(function cbError(err) {
-            return res.json(500, {
-                result: 'BAD_REQUEST',
-                reason: err
             });
         });
     },
