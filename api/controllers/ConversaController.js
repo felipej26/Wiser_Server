@@ -55,44 +55,47 @@ module.exports = {
         ConversaUsuario.find({
             usuario: usuario
         }).then(function(conversasUsuario) {
+            
+            if (!conversasUsuario[0]) {
+                console.log('Chegou Aqui');
+
+                return res.json(500, {
+                    result: 'BAD_REQUEST',
+                    reason: 'Usuario não possui conversas'
+                });
+            }
+
             return conversasUsuario;
         }).then(function(conversas) {
 
-            if (!conversas[0]) {
-                return;
-            }
-            else {
-                
-                var conversaEncontrada;
-                var conversasIds = [];
-                conversas.forEach(function(conversa) {
-                    conversasIds.push(conversa.id);
-                });
+            var conversaEncontrada;
+            var conversasIds = [];
+            conversas.forEach(function(conversa) {
+                conversasIds.push(conversa.id);
+            });
 
-                ConversaUsuario.findOne({
-                    conversa: conversasIds,
-                    usuario: destinatario
-                }).then(function(cEncontrada) {
-                    Conversa.findOne({
-                        id: cEncontrada.id
-                    })
-                    .populate('mensagens')
-                    .then(function (cConversa) {
-                        console.log('cCOnversa: ' + cConversa);
-                        return res.json(cConversa);
-                    }).catch(function (err) {
-                        return res.json(500, {
-                            result: 'BAD_REQUEST',
-                            reason: err
-                        });
-                    });
-                }).catch(function cbError(err) {
+            ConversaUsuario.findOne({
+                conversa: conversasIds,
+                usuario: destinatario
+            }).then(function(cEncontrada) {
+                Conversa.findOne({
+                    id: cEncontrada.id
+                })
+                .populate('mensagens')
+                .then(function (cConversa) {
+                    return res.json(cConversa);
+                }).catch(function (err) {
                     return res.json(500, {
                         result: 'BAD_REQUEST',
                         reason: err
                     });
                 });
-            }
+            }).catch(function cbError(err) {
+                return res.json(500, {
+                    result: 'BAD_REQUEST',
+                    reason: err
+                });
+            });
         }).catch(function cbError(err) {
             return res.json(500, {
                 result: 'BAD_REQUEST',
