@@ -40,7 +40,7 @@ module.exports = {
         });
     },
 
-    carregarEspecifico: function(req, res) {
+    carregarConversa: function(req, res) {
         
         if (!req.param('usuario') || !req.param('destinatario')) {
             return res.json(400, {
@@ -57,8 +57,6 @@ module.exports = {
         }).then(function(conversasUsuario) {
             
             if (!conversasUsuario[0]) {
-                console.log('Chegou Aqui');
-
                 return res.json(500, {
                     result: 'BAD_REQUEST',
                     reason: 'Usuario não possui conversas'
