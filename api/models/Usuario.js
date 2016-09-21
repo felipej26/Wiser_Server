@@ -38,9 +38,13 @@ module.exports = {
 			type: 'integer'
 		},
 		
+		/*
+		 * Apesar de ser 400, a aplicação permite apenas digitar 30 caracteres, 
+		 * porém um emoticon ocupa 13 posições
+		 */
 		status: {
 			type: 'string',
-			size: 30
+			size: 400
 		},
 
 		conta_ativa: {

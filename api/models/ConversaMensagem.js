@@ -31,10 +31,14 @@ module.exports = {
 			defaultsTo: false
 		},
 
+		/*
+		 * Apesar de ser 3500, a aplicação permite apenas digitar 250 caracteres, 
+		 * porém um emoticon ocupa 13 posições
+		 */
 		mensagem: {
 			type: 'string',
 			required: true,
-			size: 250
+			size: 3500
 		}
 	}
 };
