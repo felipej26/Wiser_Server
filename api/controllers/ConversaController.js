@@ -32,7 +32,13 @@ module.exports = {
             Conversa.find({
                 id: conversasIds
             })
-            .populate('usuarios')
+            .populate('usuario', {
+                where: {
+                    id: {
+                    '!': usuario
+                    }
+                }
+            })
             .populate('mensagens', {
                 where: {
                     id: {
@@ -42,8 +48,33 @@ module.exports = {
             })
             .exec(function (err, conversas) {
                 if (err) { return res.serverError(err); }
+                
+                var idsContatos = [];
 
-                return res.json(conversas);
+                conversas.forEach(function(conversa) {
+                    if (usuario != conversa.usuario.id) {
+                        idsContatos.push(conversa.usuario.id);
+                    }
+                });
+
+                Contato.find({
+                    usuario: usuario,
+                    contato: idsContatos
+                }).exec(function(err, contatos) {
+                    if (err) { return res.serverError(err); }
+                    
+                    conversas.forEach(function(conversa) {
+                        conversa.usuario.isContato = false;
+
+                        contatos.forEach(function(contato) {
+                            if (contato.contato == conversa.usuario.id) {
+                                conversa.usuario.isContato = true;
+                            }
+                        }); 
+                    });
+                    
+                    return res.json(conversas);
+                });
             });
         });
     },

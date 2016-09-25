@@ -10,9 +10,8 @@ module.exports = {
         Facebook.findOne({
             id: 1
         }).exec(function (err, accessToken){
-            if (err) {
-                return res.serverError(err);
-            }
+            if (err) { return res.serverError(err); }
+
             if (!accessToken) {
                 return res.notFound('Could not find accessToken!.');
             }

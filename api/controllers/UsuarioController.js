@@ -109,18 +109,19 @@ module.exports = {
         if (!id || !latitude || !longitude || !distancia) {
             return res.json(400, {
                 result: 'BAD_REQUEST',
-                reason: 'Algum parametro esta invalido (ID, latitude, ' +
-                    'longitude, distancia)'
+                reason: 'Parametros Invalidos (id, latitude, longitude, distancia)'
             });
         }
 
-        var query = 'SELECT id, ROUND(6371 * ACOS(SIN(' + latitude +
+        var query = 'SELECT u.*, ROUND(6371 * ACOS(SIN(' + latitude +
 			' *PI()/180)*SIN(latitude*PI()/180) + COS( ' + latitude +
 			' *PI()/180)*COS(latitude*PI()/180)*COS(longitude*PI()/180 -' + longitude +
-			' *PI()/180)), 0) AS distancia' +
-            ' FROM usuario' +
+			' *PI()/180)), 0) AS distancia,' +
+            ' CASE WHEN (c.id IS NULL) THEN FALSE ELSE TRUE END AS isContato' +
+            ' FROM usuario u' +
+            ' LEFT JOIN contato c ON c.contato = u.id AND c.usuario = ' + id +
             ' WHERE conta_ativa = 1 AND setou_configuracoes = 1' +
-            ' AND id <> \'' + id + '\'';
+            ' AND u.id <> ' + id;
 
         if (req.param('idioma'))
             query += ' AND idioma = ' + req.param('idioma');
@@ -132,26 +133,9 @@ module.exports = {
         ' ORDER BY distancia;';
         
         Usuario.query(query, function cb(err, usuarios) {
-            if (err) {
-                res.json(500, {
-                    result: 'ERROR', 
-                    reason: err
-                });
-            }
-            else {
-                var usuarioIds = [];
-                usuarios.forEach(function(usuario) {
-                    usuarioIds.push(usuario.id);
-                });
-
-                Usuario.find({
-                    id: usuarioIds
-                }).exec(function (err, usuariosResult) {
-                    if (err) { return res.serverError(err); }
-
-                    return res.json(usuariosResult);
-                });
-            }
+            if (err) { return res.serverError(err); }
+            
+            return res.json(usuarios);
         });
     }
 };

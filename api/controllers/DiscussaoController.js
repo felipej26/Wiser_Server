@@ -41,9 +41,9 @@ module.exports = {
                 Discussao.findOne({
                     id: discussao.id
                 }).exec(function(err, discussao) {
-                    if (err) { return res.json(err); }
+                    if (err) { return res.serverError(err); }
 
-                    res.json(discussao);
+                    return res.json(discussao);
                 });
             });
         }).catch(function cbError(err) {
@@ -55,6 +55,15 @@ module.exports = {
     },
 
     procurarDiscussoes: function(req, res) {
+        
+        if (!req.param('usuario') || !req.param('chave')) {
+            return res.json(400, {
+                result: 'BAD_REQUEST',
+                reason: 'Parametros Invalidos (usuario, chave)'
+            });
+        }
+
+        var usuario = req.param('usuario');
         var chave = req.param('chave');
         
         Discussao.find().where({
@@ -70,12 +79,47 @@ module.exports = {
                 }
             }]
         })
-        .populate('usuario')
+        .populate('usuario', {
+            where: {
+                id: {
+                    '!': usuario
+                }
+            }
+        })
         .populate('respostas')
-        .exec(function(err, discussoes) {
-            if (err) { return res.json(err); }
+        .then(function(discussoes) {
 
-            return res.json(discussoes);
+            var idsContatos = [];
+
+            discussoes.forEach(function(discussao) {
+                if (usuario != discussao.usuario.id) {
+                    idsContatos.push(discussao.usuario.id);
+                }
+            });
+
+            Contato.find({
+                usuario: usuario,
+                contato: idsContatos
+            }).exec(function(err, contatos) {
+                if (err) { return res.serverError(err); }
+                
+                discussoes.forEach(function(discussao) {
+                    discussao.usuario.isContato = false;
+
+                    contatos.forEach(function(contato) {
+                        if (contato.contato == discussao.usuario.id) {
+                            discussao.usuario.isContato = true;
+                        }
+                    }); 
+                });
+                
+                return res.json(discussoes);
+            });
+        }).catch(function(err) {
+            return res.json(500, {
+                result: 'BAD_REQUEST',
+                reason: err
+            });
         });
     },
 
@@ -128,30 +172,91 @@ module.exports = {
     },
 
     carregarDiscussoes: function(req, res) {
-        var usuario = req.param('usuario');
+        
+        if (!req.param('usuario') || req.param('minhasDiscussoes') == 'undefined') {
+            return res.json(400, {
+                result: 'BAD_REQUEST',
+                reason: 'Parametros Invalidos (usuario)'
+            });
+        }
 
-        if (!usuario) {
-            Discussao.find().where({
+        var usuario = req.param('usuario');
+        var minhasDiscussoes = req.param('minhasDiscussoes') == 'true';
+
+        if (!minhasDiscussoes) {
+            Discussao.find({
                 discussao_ativa: true
             })
-            .populateAll()
+            .populate('usuario')
+            .populate('respostas')
             .sort('id DESC')
             .exec(function(err, discussoes) {
-                if (err) { return res.json(err); }
+                if (err) { return res.serverError(err); }
                 
-                return res.json(discussoes);
+                var idsContatos = [];
+
+                discussoes.forEach(function(discussao) {
+                    if (usuario != discussao.usuario.id) {
+                        idsContatos.push(discussao.usuario.id);
+                    }
+                });
+
+                Contato.find({
+                    usuario: usuario,
+                    contato: idsContatos
+                }).exec(function(err, contatos) {
+                    if (err) { return res.serverError(err); }
+                    
+                    discussoes.forEach(function(discussao) {
+                        discussao.usuario.isContato = false;
+
+                        contatos.forEach(function(contato) {
+                            if (contato.contato == discussao.usuario.id) {
+                                discussao.usuario.isContato = true;
+                            }
+                        }); 
+                    });
+
+                    return res.json(discussoes);
+                });
             });
         }
         else {
             Discussao.find().where({
                 usuario: usuario
             })
-            .populateAll()
+            .populate('usuario')
+            .populate('respostas')
             .sort('id DESC')
             .exec(function(err, discussoes) {
-                if (err) { return res.json(err); }
+                if (err) { return res.serverError(err); }
 
-                return res.json(discussoes);
+                var idsContatos = [];
+
+                discussoes.forEach(function(discussao) {
+                    if (usuario != discussao.usuario.id) {
+                        idsContatos.push(discussao.usuario.id);
+                    }
+                });
+
+                Contato.find({
+                    usuario: usuario,
+                    contato: idsContatos
+                }).exec(function(err, contatos) {
+                    if (err) { return res.serverError(err); }
+                    
+                    discussoes.forEach(function(discussao) {
+                        discussao.usuario.isContato = false;
+
+                        contatos.forEach(function(contato) {
+                            if (contato.contato == discussao.usuario.id) {
+                                discussao.usuario.isContato = true;
+                            }
+                        }); 
+                    });
+
+                    return res.json(discussoes);
+                });
             });
         }
     }
