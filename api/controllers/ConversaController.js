@@ -32,7 +32,7 @@ module.exports = {
             Conversa.find({
                 id: conversasIds
             })
-            .populate('usuario', {
+            .populate('usuarios', {
                 where: {
                     id: {
                     '!': usuario
