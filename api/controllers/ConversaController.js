@@ -32,13 +32,7 @@ module.exports = {
             Conversa.find({
                 id: conversasIds
             })
-            .populate('usuarios', {
-                where: {
-                    id: {
-                    '!': usuario
-                    }
-                }
-            })
+            .populate('usuarios')
             .populate('mensagens', {
                 where: {
                     id: {
@@ -50,11 +44,13 @@ module.exports = {
                 if (err) { return res.serverError(err); }
                 
                 var idsContatos = [];
-
+                
                 conversas.forEach(function(conversa) {
-                    if (usuario != conversa.usuario.id) {
-                        idsContatos.push(conversa.usuario.id);
-                    }
+                    conversa.usuarios.forEach(function(contato) {   
+                        if (usuario != contato.usuario) {
+                            idsContatos.push(contato.usuario);
+                        }
+                    });
                 });
 
                 Contato.find({
@@ -64,13 +60,15 @@ module.exports = {
                     if (err) { return res.serverError(err); }
                     
                     conversas.forEach(function(conversa) {
-                        conversa.usuario.isContato = false;
+                        conversa.usuarios.forEach(function(conContato) {
+                            conContato.isContato = false;
 
-                        contatos.forEach(function(contato) {
-                            if (contato.contato == conversa.usuario.id) {
-                                conversa.usuario.isContato = true;
-                            }
-                        }); 
+                            contatos.forEach(function(contato) {
+                                if (contato.contato == conContato.usuario) {
+                                    conContato.isContato = true;
+                                }
+                            });
+                        });
                     });
                     
                     return res.json(conversas);
