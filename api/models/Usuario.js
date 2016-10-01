@@ -14,6 +14,12 @@ module.exports = {
 			unique: true,
 			required: true
 		},
+
+		access_token: {
+			type: 'string',
+			required: true,
+			size: 1000
+		},
 		
 		data_ultimo_acesso: {
 			type: 'datetime',

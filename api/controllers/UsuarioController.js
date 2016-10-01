@@ -8,10 +8,11 @@
 module.exports = {
 	updateOrCreate: function(req, res) {
         
-        if (!req.param('facebook_id') || !req.param('data_ultimo_acesso') || !req.param('latitude') || !req.param('longitude')) {
+        if (!req.param('facebook_id') || !req.param('access_token') || !req.param('data_ultimo_acesso') || 
+            !req.param('latitude') || !req.param('longitude')) {
             return res.json(400, {
                 result: 'BAD_REQUEST',
-                reason: 'Parametros invalidos (facebook_id, data_ultimo_acesso, latitude, longitude)'
+                reason: 'Parametros invalidos (facebook_id, access_token, data_ultimo_acesso, latitude, longitude)'
             });
         }
 
@@ -19,6 +20,7 @@ module.exports = {
 
         var values = {
             facebook_id: facebook_id,
+            access_token: req.param('access_token'),
             data_ultimo_acesso: req.param('data_ultimo_acesso'),
             latitude: req.param('latitude'),
             longitude: req.param('longitude')
@@ -32,6 +34,7 @@ module.exports = {
             Usuario.update({
                 id: usuario.id 
             }, {
+                access_token: access_token,
                 data_ultimo_acesso: values.data_ultimo_acesso,
                 latitude: values.latitude,
                 longitude: values.longitude,
