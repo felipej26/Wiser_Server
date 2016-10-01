@@ -95,6 +95,7 @@ CREATE TABLE `linguagem` (
 
 CREATE TABLE `usuario` (
   `facebook_id` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `access_token` varchar(1000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `data_ultimo_acesso` datetime DEFAULT NULL,
   `latitude` float DEFAULT NULL,
   `longitude` float DEFAULT NULL,
@@ -108,7 +109,7 @@ CREATE TABLE `usuario` (
   `updatedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `facebook_id` (`facebook_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 -- Tratamento para o banco aceitar emoticons, porém, é preciso tratar também na aplicação.

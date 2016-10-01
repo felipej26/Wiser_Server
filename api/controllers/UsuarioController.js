@@ -34,7 +34,7 @@ module.exports = {
             Usuario.update({
                 id: usuario.id 
             }, {
-                access_token: access_token,
+                access_token: values.access_token,
                 data_ultimo_acesso: values.data_ultimo_acesso,
                 latitude: values.latitude,
                 longitude: values.longitude,
@@ -43,9 +43,9 @@ module.exports = {
                 Usuario.findOne({
                     id: usuario.id
                 }).exec(function(err, usuario) {
-                    if (err) { return res.json(err); }
+                    if (err) { return res.serverError(err); }
 
-                    res.json(usuario);
+                    return res.json(usuario);
                 });
             });
         }).catch(function cbError(err) {
@@ -75,7 +75,7 @@ module.exports = {
             status: req.param('status'),
             setou_configuracoes: true
         }).exec(function(err, usuario) {
-            if (err) { return res.json(err); }
+            if (err) { return res.serverError(err); }
             
             return res.json(usuario);
         });
@@ -97,7 +97,7 @@ module.exports = {
         }, {
             conta_ativa: false
         }).exec(function(err, usuario) {
-            if (err) { return res.json(err); }
+            if (err) { return res.serverError(err); }
             
             return res.json(usuario);
         });
