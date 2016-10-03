@@ -58,7 +58,7 @@ module.exports = {
 
     salvarConfiguracoes: function(req, res) {
 
-        if (!req.param('id') || !req.param('idioma') || !req.param('fluencia') || !req.param('status')) {
+        if (!req.param('id') || !req.param('idioma') || !req.param('fluencia') || req.param('status') == 'undefined') {
             return res.json(400, {
                 result: 'BAD_REQUEST',
                 reason: 'Parametros invalidos (id, idioma, fluencia, status)'
