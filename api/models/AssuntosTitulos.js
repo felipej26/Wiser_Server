@@ -26,7 +26,17 @@ module.exports = {
 			type: 'string',
 			required: true,
 			size: 500
-		}        
+		},
+
+		toJSON: function() {
+			var obj = this.toObject();
+
+			delete obj.id;
+			delete obj.linguagem;
+			delete obj.assunto;
+			
+			return obj.titulo;
+		}
 	}
 };
 

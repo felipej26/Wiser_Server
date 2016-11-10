@@ -1,3 +1,31 @@
+CREATE TABLE `assuntos` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `assuntos_itens` (
+  `linguagem` int(11) DEFAULT NULL,
+  `assunto` int(11) DEFAULT NULL,
+  `item` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `assuntos_subcategorias` (
+  `assunto` int(11) DEFAULT NULL,
+  `subcategoria` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `assuntos_titulos` (
+  `linguagem` int(11) DEFAULT NULL,
+  `assunto` int(11) DEFAULT NULL,
+  `titulo` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 CREATE TABLE `contato` (
   `usuario` int(11) DEFAULT NULL,
   `contato` int(11) DEFAULT NULL,

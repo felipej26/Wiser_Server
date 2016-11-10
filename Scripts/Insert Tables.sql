@@ -1,4 +1,4 @@
--- Inserts que devem ser rodados quando o Banco foi criadoSelect * from Facebook;
+-- Inserts que devem ser rodados quando o Banco foi criado
 
 INSERT INTO `facebook` VALUES 
 ('570854019757986|wlsnDSdcWhFs586zho4_dgJtc18', '570854019757986', '1262642377098040', 'public_profile,user_friends', 1);
@@ -31,27 +31,28 @@ INSERT INTO `idioma` VALUES
 (2, 3, 1, 'Spanish', 8);
 
 INSERT INTO `assuntos` VALUES
+(1),
+(2),
+(3);
+
+INSERT INTO `assuntos_SubCategorias` VALUES
+(1, 'Movie', 1),
+(1, 'Fictional Character', 2),
+(2, 'TV Show', 3),
+(3, 'Book', 4);
+
+INSERT INTO `assuntos_itens` VALUES 
+(1, 1, 'O filme %a é um dos filmes que vocês curtem, por que não conversar em %i sobre ele?', 1),
+(2, 1, 'O filme %a é um dos filmes que vocês curtem, por que não conversar em %i sobre ele?', 2),
+(1, 2, 'Ambos curtem a série %a, que tal conversar, em %i, sobre ela?', 3),
+(2, 2, 'Ambos curtem a série %a, que tal conversar, em %i, sobre ela?', 4),
+(1, 3, 'Você sabia que %u também curte a série %a, vamos conversar sobre ela em %i?', 5),
+(2, 3, 'Você sabia que %u também curte a série %a, vamos conversar sobre ela em %i?', 6);
+
+INSERT INTO `assuntos_titulos` VALUES
 (1, 1, 'Filmes', 1),
 (2, 1, 'Movies', 2),
 (1, 2, 'Séries', 3),
 (2, 2, 'TV Shows', 4),
 (1, 3, 'Livros', 5),
-(2, 3, 'Books', 6),
-(1, 4, 'Amigos', 7),
-(2, 4, 'Friends', 8),
-(1, 5, 'Jogos', 9),
-(2, 5, 'Games', 10);
-
-INSERT INTO `assuntos_subcategorias` VALUES
-(1, 'Movie', 1),
-(1, 'Fictional Character', 2),
-(2, 'TV Show', 3),
-(2, 'Entertainment Website', 4),
-(3, 'Book', 5);
-
-INSERT INTO `assuntos_itens` VALUES
-(1, 1, 'O filme %a é um dos filmes que vocês curtem, por que não conversar em %i sobre ele?', 1),
-(1, 2, 'Ambos curtem a série %a, que tal conversar, em %i, sobre ela?', 2),
-(1, 2, 'Você sabia que %u também curte a série %a, vamos conversar sobre ela em %i?', 3),
-(1, 3, 'Você já terminou de ler %a? %u também curte o livro, que tal perguntar em %i se ele gostou?', 4),
-(1, 4, 'Vocês tem %f como amigo em comum, que tal falar sobre isso, em is?', 5);
+(2, 3, 'Books', 6);

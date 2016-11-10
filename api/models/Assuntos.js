@@ -11,17 +11,6 @@ module.exports = {
 	autoUpdatedAt: false,
 
 	attributes: {
-        ordem: {
-            type: 'integer',
-            required: true
-        },
-
-		categoria: {
-			type: 'string',
-			required: true,
-			size: 500
-		},
-
 		titulos: {
 			collection: 'AssuntosTitulos',
 			via: 'assunto'
