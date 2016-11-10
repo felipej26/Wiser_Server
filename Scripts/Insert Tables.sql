@@ -35,7 +35,7 @@ INSERT INTO `assuntos` VALUES
 (2),
 (3);
 
-INSERT INTO `assuntos_SubCategorias` VALUES
+INSERT INTO `assuntos_subcategorias` VALUES
 (1, 'Movie', 1),
 (1, 'Fictional Character', 2),
 (2, 'TV Show', 3),
