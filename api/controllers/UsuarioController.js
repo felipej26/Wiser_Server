@@ -64,7 +64,7 @@ module.exports = {
                 reason: 'Parametros invalidos (id, idioma, fluencia, status)'
             });
         }
-
+        
         var id = req.param('id');
         
         Usuario.update({
@@ -103,16 +103,16 @@ module.exports = {
         });
     },
 
-    encontrarUsuarios: function(req, res) {
-        var id = req.param('id');
+    procurarUsuarios: function(req, res) {
+        var usuario = req.param('usuario');
         var latitude = req.param('latitude');
         var longitude = req.param('longitude');
         var distancia = req.param('distancia');
 
-        if (!id || !latitude || !longitude || !distancia) {
+        if (!usuario || !latitude || !longitude || !distancia) {
             return res.json(400, {
                 result: 'BAD_REQUEST',
-                reason: 'Parametros Invalidos (id, latitude, longitude, distancia)'
+                reason: 'Parametros Invalidos (usuario, latitude, longitude, distancia)'
             });
         }
 
@@ -122,9 +122,9 @@ module.exports = {
 			' *PI()/180)), 0) AS distancia,' +
             ' CASE WHEN (c.id IS NULL) THEN FALSE ELSE TRUE END AS isContato' +
             ' FROM usuario u' +
-            ' LEFT JOIN contato c ON c.contato = u.id AND c.usuario = ' + id +
+            ' LEFT JOIN contato c ON c.contato = u.id AND c.usuario = ' + usuario +
             ' WHERE conta_ativa = 1 AND setou_configuracoes = 1' +
-            ' AND u.id <> ' + id;
+            ' AND u.id <> ' + usuario;
 
         if (req.param('idioma'))
             query += ' AND idioma = ' + req.param('idioma');
