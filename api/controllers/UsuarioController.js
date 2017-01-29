@@ -116,7 +116,11 @@ module.exports = {
             });
         }
 
-        var query = 'SELECT u.*, ROUND(6371 * ACOS(SIN(' + latitude +
+        var query = 'SELECT u.id, facebook_id, access_token, data_ultimo_acesso, latitude,' +
+            ' longitude, idioma, fluencia, status,' + 
+            ' CASE WHEN conta_ativa <> 0 THEN "YES" ELSE "NO" END AS conta_ativa,' +
+            ' CASE WHEN setou_configuracoes <> 0 THEN "YES" ELSE "NO" END AS setou_configuracoes,' +
+            ' ROUND(6371 * ACOS(SIN(' + latitude +
 			' *PI()/180)*SIN(latitude*PI()/180) + COS( ' + latitude +
 			' *PI()/180)*COS(latitude*PI()/180)*COS(longitude*PI()/180 -' + longitude +
 			' *PI()/180)), 0) AS distancia,' +
