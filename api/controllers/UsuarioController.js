@@ -124,7 +124,7 @@ module.exports = {
 			' *PI()/180)*SIN(latitude*PI()/180) + COS( ' + latitude +
 			' *PI()/180)*COS(latitude*PI()/180)*COS(longitude*PI()/180 -' + longitude +
 			' *PI()/180)), 0) AS distancia,' +
-            ' CASE WHEN (c.id IS NULL) THEN FALSE ELSE TRUE END AS isContato' +
+            ' CASE WHEN (c.id IS NULL) THEN "NO" ELSE "YES" END AS isContato' +
             ' FROM usuario u' +
             ' LEFT JOIN contato c ON c.contato = u.id AND c.usuario = ' + usuario +
             ' WHERE conta_ativa = 1 AND setou_configuracoes = 1' +
