@@ -142,6 +142,12 @@ module.exports = {
         Usuario.query(query, function cb(err, usuarios) {
             if (err) { return res.serverError(err); }
             
+            usuarios.forEach(function(usuario) {
+                usuario.conta_ativa = usuario.conta_ativa !== 0 ;
+                usuario.setou_configuracoes = usuario.setou_configuracoes !== 0;
+                usuario.isContato = usuario.isContato !== 0;
+            });
+            
             return res.json(usuarios);
         });
     }
