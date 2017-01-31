@@ -21,11 +21,11 @@ module.exports = {
         ConversaUsuario.find({
             usuario: usuario
         })
-        .exec(function (err, conversas) {
+        .exec(function (err, conversasusuario) {
             if (err) { return res.serverError(err); }
 
             var conversasIds = [];
-            conversas.forEach(function (conversa) {
+            conversasusuario.forEach(function (conversa) {
                 conversasIds.push(conversa.conversa);
             });
 
@@ -36,7 +36,7 @@ module.exports = {
             .populate('mensagens', {
                 where: {
                     id: {
-                    '>': lastMensagem
+                        '>': lastMensagem
                     }
                 }
             })
@@ -53,30 +53,61 @@ module.exports = {
                     });
                 });
 
-                Contato.find({
-                    usuario: usuario,
-                    contato: idsContatos
-                }).exec(function(err, contatos) {
+                /* Pesquisa todos os usuarios das conversas */
+                Usuario.find({
+                    id: idsContatos
+                }).then(function(usuarios) {
                     if (err) { return res.serverError(err); }
                     
+                    /* Percorre a lista de conversas e adiciona o campo usuario */
                     conversas.forEach(function(conversa) {
                         conversa.usuarios.forEach(function(conContato) {
-                            conContato.isContato = false;
 
-                            contatos.forEach(function(contato) {
-                                if (contato.contato == conContato.usuario) {
-                                    conContato.isContato = true;
-                                }
-                            });
+                            if (conContato.usuario != usuario) {
+                                usuarios.forEach(function(u) {
+
+                                    if (conContato.usuario == u.id) {
+                                        conversa.usuario = u;
+                                    }
+                                });
+                            }
                         });
                     });
-                    
-                    return res.json(conversas);
+
+                    return conversas;
+
+                }).then(function(conversas) {
+
+                    Contato.find({
+                        usuario: usuario,
+                        contato: idsContatos
+                    }).exec(function(err, contatos) {
+                        if (err) { return res.serverError(err); }
+
+                        /* Percorre a lista de conversas e adiciona o campo isContato dentro do campo usuario
+                        e então remove o campo usuarios */              
+                        conversas.forEach(function(conversa) {
+                            conversa.usuarios.forEach(function(conContato) {
+                                conversa.usuario.isContato = false;
+
+                                contatos.forEach(function(contato) {
+                                    if (contato.contato == conContato.usuario) {
+                                        conversa.usuario.isContato = true;
+                                    }
+                                });
+                            });
+                            
+                            /* Deveria remover o campos usuarios, porem não está removendo ! ! ! */
+                            delete conversa.usuarios;
+                        });
+
+                        return res.json(conversas);
+                    });
                 });
             });
         });
     },
-
+    
     enviarMensagem: function(req, res) {
         
         if (!req.param('conversa') || !req.param('usuario') || !req.param('destinatario') ||
