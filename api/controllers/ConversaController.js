@@ -207,7 +207,10 @@ module.exports = {
         }).exec(function (err, mensagens) {
             if (err) { return res.serverError(err); }
 
-            return res.send('SUCCESS');
+            return res.json(200, {
+                result: 'OK',
+                reason: 'Mensagens Atualizadas'
+            });
         });
     }
 };
