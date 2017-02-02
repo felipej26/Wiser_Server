@@ -40,7 +40,9 @@ module.exports = {
             }).then(function (updatedDiscussao) {
                 Discussao.findOne({
                     id: discussao.id
-                }).exec(function(err, discussao) {
+                })
+                .populate('usuario')
+                .exec(function(err, discussao) {
                     if (err) { return res.serverError(err); }
 
                     return res.json(discussao);
