@@ -150,6 +150,48 @@ module.exports = {
             
             return res.json(usuarios);
         });
+    },
+
+    carregarUsuarios: function(req, res) {
+        
+        if (!req.param('id') || !req.param('usuario')) {
+            return res.json(400, {
+                result: 'BAD_REQUEST',
+                reason: 'Parametros invalidos (id, usuario)'
+            });
+        }
+
+        var id = req.param('id');
+        var idUsuarios = req.param('usuario');
+
+        Usuario.find({
+            id: idUsuarios
+        }).exec(function(err, usuarios) {
+            if (err) { return res.serverError(err); }
+            
+            Contato.find({
+                usuario: id,
+                contato: idUsuarios
+            }).exec(function(err, contatos) {
+
+                console.log(JSON.stringify('contatos: ' + contatos));
+                console.log(JSON.stringify('usuarios: ' + usuarios));
+                
+                usuarios.forEach(function(usuario) {
+                    usuario.isContato = false;
+
+                    contatos.forEach(function(contato) {
+                        if (contato.contato == usuario.id) {
+                            usuario.isContato = true;
+                        }
+                    });
+                });
+
+                console.log(JSON.stringify('usuarios: ' + usuarios));
+
+                return res.json(usuarios);
+            });
+        });
     }
 };
 
