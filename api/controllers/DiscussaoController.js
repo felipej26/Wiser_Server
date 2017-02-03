@@ -40,9 +40,7 @@ module.exports = {
             }).then(function (updatedDiscussao) {
                 Discussao.findOne({
                     id: discussao.id
-                })
-                .populate('usuario')
-                .exec(function(err, discussao) {
+                }).exec(function(err, discussao) {
                     if (err) { return res.serverError(err); }
 
                     return res.json(discussao);
@@ -81,13 +79,6 @@ module.exports = {
                 }
             }]
         })
-        .populate('usuario', {
-            where: {
-                id: {
-                    '!': usuario
-                }
-            }
-        })
         .populate('respostas')
         .then(function(discussoes) {
 
@@ -99,24 +90,7 @@ module.exports = {
                 }
             });
 
-            Contato.find({
-                usuario: usuario,
-                contato: idsContatos
-            }).exec(function(err, contatos) {
-                if (err) { return res.serverError(err); }
-                
-                discussoes.forEach(function(discussao) {
-                    discussao.usuario.isContato = false;
-
-                    contatos.forEach(function(contato) {
-                        if (contato.contato == discussao.usuario.id) {
-                            discussao.usuario.isContato = true;
-                        }
-                    }); 
-                });
-                
-                return res.json(discussoes);
-            });
+            return res.json(discussoes);
         }).catch(function(err) {
             return res.json(500, {
                 result: 'BAD_REQUEST',
@@ -189,7 +163,6 @@ module.exports = {
             Discussao.find({
                 discussao_ativa: true
             })
-            .populate('usuario')
             .populate('respostas')
             .sort('id DESC')
             .exec(function(err, discussoes) {
@@ -203,31 +176,13 @@ module.exports = {
                     }
                 });
 
-                Contato.find({
-                    usuario: usuario,
-                    contato: idsContatos
-                }).exec(function(err, contatos) {
-                    if (err) { return res.serverError(err); }
-                    
-                    discussoes.forEach(function(discussao) {
-                        discussao.usuario.isContato = false;
-
-                        contatos.forEach(function(contato) {
-                            if (contato.contato == discussao.usuario.id) {
-                                discussao.usuario.isContato = true;
-                            }
-                        }); 
-                    });
-
-                    return res.json(discussoes);
-                });
+                return res.json(discussoes);
             });
         }
         else {
             Discussao.find().where({
                 usuario: usuario
             })
-            .populate('usuario')
             .populate('respostas')
             .sort('id DESC')
             .exec(function(err, discussoes) {
@@ -241,24 +196,7 @@ module.exports = {
                     }
                 });
 
-                Contato.find({
-                    usuario: usuario,
-                    contato: idsContatos
-                }).exec(function(err, contatos) {
-                    if (err) { return res.serverError(err); }
-                    
-                    discussoes.forEach(function(discussao) {
-                        discussao.usuario.isContato = false;
-
-                        contatos.forEach(function(contato) {
-                            if (contato.contato == discussao.usuario.id) {
-                                discussao.usuario.isContato = true;
-                            }
-                        }); 
-                    });
-
-                    return res.json(discussoes);
-                });
+                return res.json(discussoes);
             });
         }
     }
