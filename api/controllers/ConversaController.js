@@ -32,6 +32,7 @@ module.exports = {
             Conversa.find({
                 id: conversasIds
             })
+            .populate('usuarios')
             .populate('mensagens', {
                 where: {
                     id: {
@@ -42,7 +43,32 @@ module.exports = {
             .exec(function (err, conversas) {
                 if (err) { return res.serverError(err); }
                 
-                return res.json(conversas);
+                var arrConversas = [];
+
+                for (var index in conversas) {
+                    var obj = {}, key, value;
+
+                    console.log(JSON.stringify('conversa: ' + conversas[index]));
+
+                    obj.id = conversas[index].id;
+                    
+                    if (conversas[index].usuarios[0].usuario != usuario) {
+                        obj.destinatario = conversas[index].usuarios[0].usuario;
+                    }
+                    else {
+                        obj.destinatario = conversas[index].usuarios[1].usuario;
+                    }
+                    
+                    obj.mensagens = conversas[index].mensagens;
+                    obj.createdAt = conversas[index].createdAt;
+                    obj.updatedAt = conversas[index].updatedAt;
+                    
+                    arrConversas.push(obj);
+                }
+                
+                console.log(JSON.stringify('arrConversas: ' + arrConversas));
+
+                return res.json(arrConversas);
             });
         });
     },
