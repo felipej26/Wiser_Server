@@ -32,7 +32,6 @@ module.exports = {
             Conversa.find({
                 id: conversasIds
             })
-            .populate('usuarios')
             .populate('mensagens', {
                 where: {
                     id: {
@@ -43,67 +42,7 @@ module.exports = {
             .exec(function (err, conversas) {
                 if (err) { return res.serverError(err); }
                 
-                var idsContatos = [];
-                
-                conversas.forEach(function(conversa) {
-                    conversa.usuarios.forEach(function(contato) {   
-                        if (usuario != contato.usuario) {
-                            idsContatos.push(contato.usuario);
-                        }
-                    });
-                });
-
-                /* Pesquisa todos os usuarios das conversas */
-                Usuario.find({
-                    id: idsContatos
-                }).then(function(usuarios) {
-                    if (err) { return res.serverError(err); }
-                    
-                    /* Percorre a lista de conversas e adiciona o campo usuario */
-                    conversas.forEach(function(conversa) {
-                        conversa.usuarios.forEach(function(conContato) {
-
-                            if (conContato.usuario != usuario) {
-                                usuarios.forEach(function(u) {
-
-                                    if (conContato.usuario == u.id) {
-                                        conversa.usuario = u;
-                                    }
-                                });
-                            }
-                        });
-                    });
-
-                    return conversas;
-
-                }).then(function(conversas) {
-
-                    Contato.find({
-                        usuario: usuario,
-                        contato: idsContatos
-                    }).exec(function(err, contatos) {
-                        if (err) { return res.serverError(err); }
-
-                        /* Percorre a lista de conversas e adiciona o campo isContato dentro do campo usuario
-                        e então remove o campo usuarios */              
-                        conversas.forEach(function(conversa) {
-                            conversa.usuarios.forEach(function(conContato) {
-                                conversa.usuario.isContato = false;
-
-                                contatos.forEach(function(contato) {
-                                    if (contato.contato == conContato.usuario) {
-                                        conversa.usuario.isContato = true;
-                                    }
-                                });
-                            });
-                            
-                            /* Deveria remover o campos usuarios, porem não está removendo ! ! ! */
-                            delete conversa.usuarios;
-                        });
-
-                        return res.json(conversas);
-                    });
-                });
+                return res.json(conversas);
             });
         });
     },
