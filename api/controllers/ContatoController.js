@@ -43,7 +43,6 @@ module.exports = {
         Contato.find({
             usuario: req.param('usuario')
         })
-        .populate('contato')
         .exec(function(err, contatos) {
             if (err) { return res.serverError(err); }
             
