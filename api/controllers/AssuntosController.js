@@ -23,6 +23,13 @@ module.exports = {
         .exec(function(err, lingua) {
             if (err) { return res.serverError(err); }
 
+            if (lingua === undefined) {
+                return res.json(400, {
+                    result: 'BAD_REQUEST',
+                    reason: 'Parametros Inválidos (linguagem)'
+                });
+            }
+
             Assuntos.find()
             .populate('titulos', {
                 where: {
