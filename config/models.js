@@ -29,6 +29,6 @@ module.exports.models = {
   ***************************************************************************/
 
   connection: 'mySqlProd',
-  migrate: 'alter'
+  migrate: 'safe'
 
 };
