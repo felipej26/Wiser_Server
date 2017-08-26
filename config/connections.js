@@ -94,8 +94,7 @@ module.exports.connections = {
 		host: 'us-cdbr-iron-east-05.cleardb.net',
 		user: 'bf2fe7b689048b',
 		password: '9235362a',
-		port: process.env.PORT,
+		port: 3306,
 		database: 'heroku_c2e002e96f3d0f9'
 	}
-
 };
