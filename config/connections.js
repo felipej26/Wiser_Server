@@ -94,7 +94,7 @@ module.exports.connections = {
 		host: 'us-cdbr-iron-east-05.cleardb.net',
 		user: 'bf2fe7b689048b',
 		password: '9235362a',
-		//port: process.env.OPENSHIFT_MYSQL_DB_PORT || 3306,
+		port: process.env.PORT,
 		database: 'heroku_c2e002e96f3d0f9'
 	}
 
