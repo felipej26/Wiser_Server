@@ -18,7 +18,7 @@
     "grunt-contrib-watch": "0.5.3",
     "grunt-sails-linker": "~0.10.1",
     "grunt-sync": "0.2.4",
-    "include-all": "~0.1.6",
+    "include-all": "^0.1.6",
     "npm": "~2.15.8",
     "rc": "1.0.1",
     "sails": "^0.12.4",

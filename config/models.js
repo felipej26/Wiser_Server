@@ -29,6 +29,6 @@ module.exports.models = {
   ***************************************************************************/
 
   connection: 'mySQLAdapter',
-  migrate: 'safe'
+  migrate: 'alter'
 
 };

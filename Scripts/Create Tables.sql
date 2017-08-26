@@ -127,11 +127,10 @@ CREATE TABLE `usuario` (
   `data_ultimo_acesso` datetime DEFAULT NULL,
   `latitude` float DEFAULT NULL,
   `longitude` float DEFAULT NULL,
-  `idioma` int(11) DEFAULT NULL,
-  `fluencia` int(11) DEFAULT NULL,
-  `status` varchar(400) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `idioma` int(11) DEFAULT 0,
+  `fluencia` int(11) DEFAULT 0,
+  `status` varchar(1000) COLLATE utf8mb4_unicode_ci DEFAULT '',
   `conta_ativa` tinyint(1) DEFAULT NULL,
-  `setou_configuracoes` tinyint(1) DEFAULT NULL,
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `createdAt` datetime DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
@@ -146,7 +145,7 @@ SET NAMES utf8mb4;
 ALTER DATABASE `nodejs` CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 ALTER TABLE `usuario` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-ALTER TABLE `usuario` CHANGE `status` `status` VARCHAR(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
+ALTER TABLE `usuario` CHANGE `status` `status` VARCHAR(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';
 REPAIR TABLE `usuario`;
 OPTIMIZE TABLE `usuario`;
 

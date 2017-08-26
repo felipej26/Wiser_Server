@@ -45,22 +45,16 @@ module.exports = {
 		},
 		
 		/*
-		 * Apesar de ser 400, a aplicação permite apenas digitar 30 caracteres, 
-		 * porém um emoticon ocupa 13 posições
+		 * Lembrando que um Emoticon ocupa 13 de espaço
 		 */
 		status: {
 			type: 'string',
-			size: 400
+			size: 1000
 		},
 
 		conta_ativa: {
 			type: 'boolean',
 			defaultsTo: true
-		},
-
-		setou_configuracoes: {
-			type: 'boolean',
-			defaultsTo: false
 		}
 	}
 };

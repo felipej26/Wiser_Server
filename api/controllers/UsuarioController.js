@@ -72,8 +72,7 @@ module.exports = {
         }, {
             idioma: req.param('idioma'),
             fluencia: req.param('fluencia'),
-            status: req.param('status'),
-            setou_configuracoes: true
+            status: req.param('status')
         }).exec(function(err, usuario) {
             if (err) { return res.serverError(err); }
             
@@ -119,7 +118,6 @@ module.exports = {
         var query = 'SELECT u.id, facebook_id, access_token, data_ultimo_acesso, latitude,' +
             ' longitude, idioma, fluencia, status,' + 
             ' CASE WHEN conta_ativa <> 0 THEN TRUE ELSE FALSE END AS conta_ativa,' +
-            ' CASE WHEN setou_configuracoes <> 0 THEN TRUE ELSE FALSE END AS setou_configuracoes,' +
             ' ROUND(6371 * ACOS(SIN(' + latitude +
 			' *PI()/180)*SIN(latitude*PI()/180) + COS( ' + latitude +
 			' *PI()/180)*COS(latitude*PI()/180)*COS(longitude*PI()/180 -' + longitude +
@@ -144,7 +142,6 @@ module.exports = {
             
             usuarios.forEach(function(usuario) {
                 usuario.conta_ativa = usuario.conta_ativa !== 0 ;
-                usuario.setou_configuracoes = usuario.setou_configuracoes !== 0;
                 usuario.isContato = usuario.isContato !== 0;
             });
             
@@ -178,6 +175,7 @@ module.exports = {
                 console.log(JSON.stringify('usuarios: ' + usuarios));
                 
                 usuarios.forEach(function(usuario) {
+                    
                     usuario.isContato = false;
 
                     contatos.forEach(function(contato) {
