@@ -89,13 +89,13 @@ module.exports.connections = {
   *                                                                          *
   ***************************************************************************/
 	
-  mySQLAdapter: {
+  mySqlProd: {
 		adapter: 'sails-mysql',
-		host: process.env.OPENSHIFT_MYSQL_DB_HOST || '127.0.0.1',
-		user: process.env.OPENSHIFT_MYSQL_DB_USERNAME || 'root',
-		password: process.env.OPENSHIFT_MYSQL_DB_PASSWORD || 'root',
-		port: process.env.OPENSHIFT_MYSQL_DB_PORT || 3306,
-		database: 'nodejs'
+		host: 'us-cdbr-iron-east-05.cleardb.net',
+		user: 'bf2fe7b689048b',
+		password: '9235362a',
+		//port: process.env.OPENSHIFT_MYSQL_DB_PORT || 3306,
+		database: 'heroku_c2e002e96f3d0f9'
 	}
 
 };
