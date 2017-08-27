@@ -91,10 +91,19 @@ module.exports.connections = {
 	
   mySqlProd: {
 		adapter: 'sails-mysql',
-		host: 'us-cdbr-iron-east-05.cleardb.net',
-		user: 'bf2fe7b689048b',
-		password: '9235362a',
+		host: process.env.HOST,
+		user: process.env.USER,
+		password: process.env.PASS,
+		port: process.env.PORT,
+		database: process.env.DATABASE
+  },
+
+  mySqlDev: {
+    adapter: 'sails-mysql',
+		host: 'localhost',
+		user: 'root',
+		password: 'root',
 		port: 3306,
-		database: 'heroku_c2e002e96f3d0f9'
-	}
+		database: 'wiser'
+  }
 };

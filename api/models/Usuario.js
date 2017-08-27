@@ -55,6 +55,11 @@ module.exports = {
 		conta_ativa: {
 			type: 'boolean',
 			defaultsTo: true
+		},
+
+		setou_configuracoes: {
+			type: 'boolean',
+			defaultsTo: false
 		}
 	}
 };

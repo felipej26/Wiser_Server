@@ -72,7 +72,8 @@ module.exports = {
         }, {
             idioma: req.param('idioma'),
             fluencia: req.param('fluencia'),
-            status: req.param('status')
+            status: req.param('status'),
+            setou_configuracoes: true
         }).exec(function(err, usuario) {
             if (err) { return res.serverError(err); }
             
@@ -170,10 +171,6 @@ module.exports = {
                 usuario: id,
                 contato: idUsuarios
             }).exec(function(err, contatos) {
-
-                console.log(JSON.stringify('contatos: ' + contatos));
-                console.log(JSON.stringify('usuarios: ' + usuarios));
-                
                 usuarios.forEach(function(usuario) {
                     
                     usuario.isContato = false;
@@ -184,8 +181,6 @@ module.exports = {
                         }
                     });
                 });
-
-                console.log(JSON.stringify('usuarios: ' + usuarios));
 
                 return res.json(usuarios);
             });

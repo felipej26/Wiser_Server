@@ -127,16 +127,16 @@ CREATE TABLE `usuario` (
   `data_ultimo_acesso` datetime DEFAULT NULL,
   `latitude` float DEFAULT NULL,
   `longitude` float DEFAULT NULL,
-  `idioma` int(11) DEFAULT 0,
-  `fluencia` int(11) DEFAULT 0,
-  `status` varchar(1000) COLLATE utf8mb4_unicode_ci DEFAULT '',
+  `idioma` int(11) DEFAULT NULL,
+  `fluencia` int(11) DEFAULT NULL,
+  `status` varchar(1000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `conta_ativa` tinyint(1) DEFAULT NULL,
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `createdAt` datetime DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `facebook_id` (`facebook_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
 -- Tratamento para o banco aceitar emoticons, porém, é preciso tratar também na aplicação.
