@@ -131,6 +131,7 @@ CREATE TABLE `usuario` (
   `fluencia` int(11) DEFAULT NULL,
   `status` varchar(1000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `conta_ativa` tinyint(1) DEFAULT NULL,
+  `setou_configuracoes` tinyint(1) DEFAULT NULL,
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `createdAt` datetime DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
