@@ -41,12 +41,22 @@ module.exports = {
         }
 
         Contato.find({
+            select: ['contato'],
             usuario: req.param('usuario')
         })
+        .populate('contato')
         .exec(function(err, contatos) {
             if (err) { return res.serverError(err); }
             
-            return res.json(contatos);
+            var contatosFormatados = [];
+
+            console.log(JSON.stringify(contatos));
+
+            contatos.forEach(function(contato) {
+                contatosFormatados.push(contato.contato);
+            });
+
+            return res.json(contatosFormatados);
         });
     }
 };
