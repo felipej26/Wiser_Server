@@ -8,17 +8,27 @@
 module.exports = {
 	updateOrCreate: function(req, res) {
         
-        if (!req.param('facebook_id') || !req.param('access_token') || !req.param('data_ultimo_acesso') || 
-            !req.param('latitude') || !req.param('longitude')) {
+        if (!req.param('nome') || 
+            !req.param('primeiro_nome') || 
+            !req.param('data_nascimento') || 
+            !req.param('facebook_id') || 
+            !req.param('access_token') || 
+            !req.param('data_ultimo_acesso') || 
+            !req.param('latitude') || 
+            !req.param('longitude')) {
             return res.json(400, {
                 result: 'BAD_REQUEST',
-                reason: 'Parametros invalidos (facebook_id, access_token, data_ultimo_acesso, latitude, longitude)'
+                reason: 'Parametros invalidos (nome, primeiro_nome, data_nascimento, facebook_id, ' +
+                    'access_token, data_ultimo_acesso, latitude, longitude)'
             });
         }
 
         var facebook_id = req.param('facebook_id');
 
         var values = {
+            nome: req.param('nome'),
+            primeiro_nome: req.param('primeiro_nome'),
+            data_nascimento: req.param('data_nascimento'),
             facebook_id: facebook_id,
             access_token: req.param('access_token'),
             data_ultimo_acesso: req.param('data_ultimo_acesso'),
@@ -34,6 +44,9 @@ module.exports = {
             Usuario.update({
                 id: usuario.id 
             }, {
+                nome: values.nome,
+                primeiro_nome: values.primeiro_nome,
+                data_nascimento: values.data_nascimento,
                 access_token: values.access_token,
                 data_ultimo_acesso: values.data_ultimo_acesso,
                 latitude: values.latitude,
@@ -116,9 +129,7 @@ module.exports = {
             });
         }
 
-        var query = 'SELECT u.id, facebook_id, access_token, data_ultimo_acesso, latitude,' +
-            ' longitude, idioma, fluencia, status,' + 
-            ' CASE WHEN conta_ativa <> 0 THEN TRUE ELSE FALSE END AS conta_ativa,' +
+        var query = 'SELECT u.*,' +
             ' ROUND(6371 * ACOS(SIN(' + latitude +
 			' *PI()/180)*SIN(latitude*PI()/180) + COS( ' + latitude +
 			' *PI()/180)*COS(latitude*PI()/180)*COS(longitude*PI()/180 -' + longitude +
@@ -143,6 +154,7 @@ module.exports = {
             
             usuarios.forEach(function(usuario) {
                 usuario.conta_ativa = usuario.conta_ativa !== 0 ;
+                usuario.setou_configuracoes = usuario.setou_configuracoes !== 0;
                 usuario.isContato = usuario.isContato !== 0;
             });
             

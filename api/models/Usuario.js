@@ -8,6 +8,23 @@
 module.exports = {
 	
 	attributes: {
+		nome: {
+			type: 'string',
+			size: 200,
+			required: true
+		},
+
+		primeiro_nome: {
+			type: 'string',
+			size: 200,
+			required: true
+		},
+
+		data_nascimento: {
+			type: 'date',
+			required: true
+		},
+
 		facebook_id: {
 			type: 'string',
 			size: 30,
