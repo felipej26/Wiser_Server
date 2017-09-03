@@ -122,6 +122,9 @@ CREATE TABLE `linguagem` (
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE `usuario` (
+  `nome` varchar(200) DEFAULT NULL,
+  `primeiro_nome` varchar(200) DEFAULT NULL,
+  `data_nascimento` date DEFAULT NULL,
   `facebook_id` varchar(30) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `access_token` varchar(1000) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `data_ultimo_acesso` datetime DEFAULT NULL,
@@ -139,29 +142,7 @@ CREATE TABLE `usuario` (
   UNIQUE KEY `facebook_id` (`facebook_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
 -- Tratamento para o banco aceitar emoticons, porém, é preciso tratar também na aplicação.
 
 SET NAMES utf8mb4;
-ALTER DATABASE `nodejs` CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
-
-ALTER TABLE `usuario` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-ALTER TABLE `usuario` CHANGE `status` `status` VARCHAR(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '';
-REPAIR TABLE `usuario`;
-OPTIMIZE TABLE `usuario`;
-
-ALTER TABLE `conversa_mensagem` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-ALTER TABLE `conversa_mensagem` CHANGE `mensagem` `mensagem` VARCHAR(3500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
-REPAIR TABLE `conversa_mensagem`;
-OPTIMIZE TABLE `conversa_mensagem`;
-
-ALTER TABLE `discussao` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-ALTER TABLE `discussao` CHANGE `titulo` `titulo` VARCHAR(400) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
-ALTER TABLE `discussao` CHANGE `descricao` `descricao` VARCHAR(3500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
-REPAIR TABLE `discussao`;
-OPTIMIZE TABLE `discussao`;
-
-ALTER TABLE `discussao_resposta` CONVERT TO CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-ALTER TABLE `discussao_resposta` CHANGE `resposta` `resposta` VARCHAR(3500) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL;
-REPAIR TABLE `discussao_resposta`;
-OPTIMIZE TABLE `discussao_resposta`;
+ALTER DATABASE `wiser` CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci;

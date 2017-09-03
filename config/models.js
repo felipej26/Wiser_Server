@@ -30,5 +30,4 @@ module.exports.models = {
 
   connection: 'mySqlProd',
   migrate: 'safe'
-
 };

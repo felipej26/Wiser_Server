@@ -1,6 +1,6 @@
 -- Inserts que devem ser rodados quando o Banco foi criado
 
-USE nodejs;
+USE wiser
 
 -- Limpa as Tabelas
 TRUNCATE TABLE `assuntos`;
