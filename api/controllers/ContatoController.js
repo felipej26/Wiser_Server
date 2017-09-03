@@ -41,7 +41,6 @@ module.exports = {
         }
 
         Contato.find({
-            select: ['contato'],
             usuario: req.param('usuario')
         })
         .populate('contato')
@@ -53,7 +52,7 @@ module.exports = {
             contatos.forEach(function(contato) {
                 contatosFormatados.push(contato.contato);
             });
-
+            
             return res.json(contatosFormatados);
         });
     }

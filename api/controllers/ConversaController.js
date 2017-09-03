@@ -40,35 +40,80 @@ module.exports = {
                     }
                 }
             })
-            .exec(function (err, conversas) {
-                if (err) { return res.serverError(err); }
+            .then(function(conversas) {
+                var idsUsuarios = [];
+
+                conversas.forEach(function(conversa) {
+                    idsUsuarios.push(conversa.usuarios[
+                        conversa.usuarios[0].id == usuario ? 1 : 0
+                    ].id);
+                });
+
+                var usuariosConversa = Usuario.find({
+                    id: idsUsuarios
+                })
+                .then(function(usuarios) {
+                    return usuarios;
+                });
+
+                var contatosConversa = Contato.find({
+                    usuario: usuario,
+                    contato: idsUsuarios
+                })
+                .then(function(contatos) {
+                    return contatos
+                });
+
+                return [conversas, usuariosConversa, contatosConversa];
+            })
+            .spread(function(conversas, usuarios, contatos) {
+
+                usuarios = sails.util.indexBy(usuarios, 'id');
+                contatos = sails.util.indexBy(contatos, 'contato');
+
+                conversas.forEach(function(conversa) {
+                    var u = conversa.usuarios[conversa.usuarios[0].id == usuario ? 1 : 0].id;
+                    conversa.destinatario = usuarios[u];
+                    conversa.destinatario.isContato = typeof contatos[u] !== 'undefined';
+
+                    delete conversa.usuarios;
+                });
                 
-                var arrConversas = [];
+                return res.json(conversas);
+            })
+            .catch(function cbError(err) {
+                return res.json(500, {
+                    result: 'BAD_REQUEST',
+                    reason: err
+                });
+            });
+        });
+    },
 
-                for (var index in conversas) {
-                    var obj = {}, key, value;
+    carregarConversa: function(req, res) {
 
-                    console.log(JSON.stringify('conversa: ' + conversas[index]));
+        if (!req.param('usuario') || !req.param('destinatario')) {
+            return res.json(400, {
+                result: 'BAD_REQUEST',
+                reason: 'Parametros Invalidos (usuario, destinatario)'
+            });
+        }
 
-                    obj.id = conversas[index].id;
-                    
-                    if (conversas[index].usuarios[0].usuario != usuario) {
-                        obj.destinatario = conversas[index].usuarios[0].usuario;
-                    }
-                    else {
-                        obj.destinatario = conversas[index].usuarios[1].usuario;
-                    }
-                    
-                    obj.mensagens = conversas[index].mensagens;
-                    obj.createdAt = conversas[index].createdAt;
-                    obj.updatedAt = conversas[index].updatedAt;
-                    
-                    arrConversas.push(obj);
-                }
-                
-                console.log(JSON.stringify('arrConversas: ' + arrConversas));
-
-                return res.json(arrConversas);
+        var query = 'SELECT * FROM conversa_usuario' +
+        ' WHERE usuario = ' + req.param('destinatario') + ' AND conversa IN (' +
+        '     SELECT conversa FROM conversa_usuario' +
+        '     WHERE usuario = ' + req.param('usuario') +
+        ' );';
+        
+        ConversaUsuario.query(query, function cb(err, conversa) {
+            if (err) { return res.serverError(err); }
+            
+            Conversa.findOne({
+                id: conversa[0].conversa
+            })
+            .populate('mensagens')
+            .then(function(c) {
+                return res.json(c);
             });
         });
     },
