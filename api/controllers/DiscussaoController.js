@@ -7,19 +7,16 @@
 
 module.exports = {
     updateOrCreate: function(req, res) {
-        var id = req.param('id');
-        var titulo = req.param('titulo');
-        var descricao = req.param('descricao');
-
-        if (!id || !titulo || !descricao) {
+        if (!req.param('id') || !req.param('usuario') || !req.param('titulo') || 
+            !req.param('descricao') || !req.param('data')) {
             return res.json(400, {
                 result: 'BAD_REQUEST',
-                reason: 'Parametros Inválidos!'
+                reason: 'Parametros invalidos (id, usuario, titulo, descricao, data)'
             });
         }
 
         var values = {
-            id: id,
+            id: req.param('id'),
             usuario: req.param('usuario'),
             titulo: req.param('titulo'),
             descricao: req.param('descricao'),
@@ -27,7 +24,7 @@ module.exports = {
         };
 
         Discussao.findOrCreate({
-            id: id
+            id: req.param('id')
         }, values)
         .then(function (discussao) {
 
@@ -40,7 +37,9 @@ module.exports = {
             }).then(function (updatedDiscussao) {
                 Discussao.findOne({
                     id: discussao.id
-                }).exec(function(err, discussao) {
+                })
+                .populate('usuario')
+                .exec(function(err, discussao) {
                     if (err) { return res.serverError(err); }
 
                     return res.json(discussao);
@@ -65,8 +64,8 @@ module.exports = {
 
         var usuario = req.param('usuario');
         var chave = req.param('chave');
-        
-        Discussao.find().where({
+
+        var criteria = {
             or: [{
                 id: chave
             }, {
@@ -78,24 +77,11 @@ module.exports = {
                     descricao: '%' + chave + '%'
                 }
             }]
-        })
-        .populate('respostas')
+        }
+
+        carregarDiscussoesUsuarios(usuario, criteria)
         .then(function(discussoes) {
-
-            var idsContatos = [];
-
-            discussoes.forEach(function(discussao) {
-                if (usuario != discussao.usuario.id) {
-                    idsContatos.push(discussao.usuario.id);
-                }
-            });
-
             return res.json(discussoes);
-        }).catch(function(err) {
-            return res.json(500, {
-                result: 'BAD_REQUEST',
-                reason: err
-            });
         });
     },
 
@@ -140,10 +126,19 @@ module.exports = {
             usuario: req.param('usuario'),
             data: req.param('data'),
             resposta: req.param('resposta')
-        }).exec(function(err, resposta) {
-            if (err) { return res.json(err); }
-
-            return res.json(resposta);
+        })
+        .then(function(resposta) {
+            return DiscussaoResposta.findOne({id: resposta.id})
+            .populate('usuario');
+        })
+        .then(function(respostaUsuario) {
+            return res.json(respostaUsuario);
+        })
+        .catch(function cbError(err) {
+            return res.json(500, {
+                result: 'BAD_REQUEST',
+                reason: err
+            });
         });
     },
 
@@ -152,53 +147,83 @@ module.exports = {
         if (!req.param('usuario') || req.param('minhasDiscussoes') == 'undefined') {
             return res.json(400, {
                 result: 'BAD_REQUEST',
-                reason: 'Parametros Invalidos (usuario)'
+                reason: 'Parametros Invalidos (usuario, minhasDiscussoes)'
             });
         }
 
         var usuario = req.param('usuario');
-        var minhasDiscussoes = req.param('minhasDiscussoes') == 'true';
+        var minhasDiscussoes = req.param('minhasDiscussoes') === 'true';
+        var criteria = {};
 
         if (!minhasDiscussoes) {
-            Discussao.find({
+            criteria = {
                 discussao_ativa: true
-            })
-            .populate('respostas')
-            .sort('id DESC')
-            .exec(function(err, discussoes) {
-                if (err) { return res.serverError(err); }
-                
-                var idsContatos = [];
-
-                discussoes.forEach(function(discussao) {
-                    if (usuario != discussao.usuario.id) {
-                        idsContatos.push(discussao.usuario.id);
-                    }
-                });
-
-                return res.json(discussoes);
-            });
+            }
         }
         else {
-            Discussao.find().where({
+            criteria = {
                 usuario: usuario
-            })
-            .populate('respostas')
-            .sort('id DESC')
-            .exec(function(err, discussoes) {
-                if (err) { return res.serverError(err); }
-
-                var idsContatos = [];
-
-                discussoes.forEach(function(discussao) {
-                    if (usuario != discussao.usuario.id) {
-                        idsContatos.push(discussao.usuario.id);
-                    }
-                });
-
-                return res.json(discussoes);
-            });
+            };
         }
+
+        carregarDiscussoesUsuarios(usuario, criteria)
+        .then(function(discussoes) {
+            return res.json(discussoes);
+        });
     }
 };
 
+
+function carregarDiscussoesUsuarios(usuario, criteria) {
+
+    return Discussao.find().where(criteria)
+    .populate('usuario')
+    .populate('respostas')
+    .sort('id DESC')
+    .then(function(discussoes) {
+
+        var idsContatos = [];
+        var idsVerificarContatos = [];
+
+        discussoes.forEach(function(discussao) {
+            idsVerificarContatos.push(discussao.usuario.id);
+
+            discussao.respostas.forEach(function(resposta) {
+                idsContatos.push(resposta.usuario);
+                idsVerificarContatos.push(resposta.usuario);
+            });
+        });
+        
+        var usuariosReposta = Usuario.find({
+            id: idsContatos
+        }).then(function(usuarios) {
+            return usuarios;
+        });
+
+        var contatosResposta = Contato.find({
+            usuario: usuario,
+            contato: idsVerificarContatos
+        }).then(function(c) {
+            return c;
+        });
+
+        return [discussoes, usuariosReposta, contatosResposta];
+    }).spread(function(discussoes, usuarios, contatos) {
+
+        usuarios = sails.util.indexBy(usuarios, 'id');
+        contatos = sails.util.indexBy(contatos, 'contato');
+
+        discussoes.forEach(function(discussao) {
+            discussao.usuario.isContato = typeof contatos[discussao.usuario.id] !== 'undefined';
+            discussao.respostas = discussao.respostas.map(function(resposta) {
+                resposta.usuario = usuarios[resposta.usuario];
+                resposta.usuario.isContato = typeof contatos[resposta.usuario.id] !== 'undefined';
+                return resposta;
+            });
+        });
+
+        return discussoes;
+    }).catch(function cb(err) {
+        return err
+    });
+}
