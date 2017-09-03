@@ -50,8 +50,6 @@ module.exports = {
             
             var contatosFormatados = [];
 
-            console.log(JSON.stringify(contatos));
-
             contatos.forEach(function(contato) {
                 contatosFormatados.push(contato.contato);
             });
