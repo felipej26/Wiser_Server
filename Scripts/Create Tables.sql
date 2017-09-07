@@ -121,6 +121,12 @@ CREATE TABLE `linguagem` (
   UNIQUE KEY `chave` (`chave`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE `sistema` (
+  `min_versao` varchar(20) DEFAULT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB;
+
 CREATE TABLE `usuario` (
   `nome` varchar(200) DEFAULT NULL,
   `primeiro_nome` varchar(200) DEFAULT NULL,

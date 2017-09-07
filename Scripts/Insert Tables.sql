@@ -51,8 +51,6 @@ INSERT INTO `facebook` VALUES
 ('570854019757986|wlsnDSdcWhFs586zho4_dgJtc18', '570854019757986', '1262642377098040', 'public_profile,user_friends,user_likes,user_birthday', 1);
 
 INSERT INTO `fluencia` VALUES
-(1, 0, 'Todos', 1),
-(2, 0, 'All', 2),
 (1, 1, 'Fluente', 3),
 (2, 1, 'Fluent', 4),
 (1, 2, 'Avançado', 5),
@@ -63,8 +61,6 @@ INSERT INTO `fluencia` VALUES
 (2, 4, 'Beginner', 10);
 
 INSERT INTO `idioma` VALUES
-(1, 0, 0, 'Todos', 1),
-(2, 0, 0, 'All', 2),
 (1, 1, 0, 'Português', 3),
 (2, 1, 0, 'Portuguese', 4),
 (1, 2, 1, 'Inglês', 5),
@@ -76,6 +72,9 @@ INSERT INTO `linguagem` VALUES
 ('pt', 1, 1, 1),
 ('en', 0, 1, 2),
 ('es', 0, 0, 3);
+
+INSERT INTO `sistema` VALUES
+('0.0', 1);
 
 /*
 INSERT INTO `contato` VALUES

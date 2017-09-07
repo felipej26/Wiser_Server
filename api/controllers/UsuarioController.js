@@ -115,17 +115,17 @@ module.exports = {
             return res.json(usuario);
         });
     },
-
+    
     procurarUsuarios: function(req, res) {
         var usuario = req.param('usuario');
         var latitude = req.param('latitude');
         var longitude = req.param('longitude');
-        var distancia = req.param('distancia');
+        var idioma = req.param('idioma');
 
-        if (!usuario || !latitude || !longitude || !distancia) {
+        if (!usuario || !latitude || !longitude || !idioma) {
             return res.json(400, {
                 result: 'BAD_REQUEST',
-                reason: 'Parametros Invalidos (usuario, latitude, longitude, distancia)'
+                reason: 'Parametros Invalidos (usuario, latitude, longitude, idioma)'
             });
         }
 
@@ -138,16 +138,13 @@ module.exports = {
             ' FROM usuario u' +
             ' LEFT JOIN contato c ON c.contato = u.id AND c.usuario = ' + usuario +
             ' WHERE conta_ativa = 1 AND setou_configuracoes = 1' +
-            ' AND u.id <> ' + usuario;
-
-        if (req.param('idioma'))
-            query += ' AND idioma = ' + req.param('idioma');
+            ' AND u.id <> ' + usuario +
+            ' AND idioma IN (' + req.param('idioma') + ')';
         
         if (req.param('fluencia')) 
-            query += ' AND fluencia = ' + req.param('fluencia');
+            query += ' AND fluencia IN (' + req.param('fluencia') + ')';
 
-        query += ' HAVING distancia <= ' + distancia +
-        ' ORDER BY distancia;';
+        query += ' ORDER BY distancia;';
         
         Usuario.query(query, function cb(err, usuarios) {
             if (err) { return res.serverError(err); }

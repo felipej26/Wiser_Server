@@ -108,6 +108,10 @@ module.exports = {
         ConversaUsuario.query(query, function cb(err, conversa) {
             if (err) { return res.serverError(err); }
             
+            if (!conversa || conversa.length == 0) {
+                return res.notFound();
+            }
+
             Conversa.findOne({
                 id: conversa[0].conversa
             })
