@@ -45,8 +45,8 @@ module.exports = {
 
                 conversas.forEach(function(conversa) {
                     idsUsuarios.push(conversa.usuarios[
-                        conversa.usuarios[0].id == usuario ? 1 : 0
-                    ].id);
+                        conversa.usuarios[0].usuario == usuario ? 1 : 0
+                    ].usuario);
                 });
 
                 var usuariosConversa = Usuario.find({
@@ -72,10 +72,10 @@ module.exports = {
                 contatos = sails.util.indexBy(contatos, 'contato');
 
                 conversas.forEach(function(conversa) {
-                    var u = conversa.usuarios[conversa.usuarios[0].id == usuario ? 1 : 0].id;
+                    var u = conversa.usuarios[conversa.usuarios[0].usuario == usuario ? 1 : 0].usuario;
                     conversa.destinatario = usuarios[u];
                     conversa.destinatario.isContato = typeof contatos[u] !== 'undefined';
-
+                    
                     delete conversa.usuarios;
                 });
                 
