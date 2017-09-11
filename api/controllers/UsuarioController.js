@@ -194,6 +194,41 @@ module.exports = {
                 return res.json(usuarios);
             });
         });
+    },
+
+    carregarUsuario: function(req, res) {
+        
+        if (!req.param('id') || !req.param('usuario')) {
+            return res.json(400, {
+                result: 'BAD_REQUEST',
+                reason: 'Parametros invalidos (id, usuario)'
+            });
+        }
+
+        var id = req.param('id');
+        var usuario = req.param('usuario');
+
+        Usuario.findOne({
+            id: usuario
+        }).exec(function(err, usuarioEncontrado) {
+            if (err) { return res.serverError(err); }
+            
+            Contato.findOne({
+                usuario: id,
+                contato: usuario
+            }).exec(function(err, contato) {
+                if (err) { return res.serverError(err); }
+
+                if (!contato) {
+                    usuarioEncontrado.isContato = false;
+                }
+                else {
+                    usuarioEncontrado.isContato = true;
+                }
+
+                return res.json(usuarioEncontrado);
+            });
+        });
     }
 };
 

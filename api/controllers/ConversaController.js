@@ -41,44 +41,11 @@ module.exports = {
                 }
             })
             .then(function(conversas) {
-                var idsUsuarios = [];
 
                 conversas.forEach(function(conversa) {
-                    idsUsuarios.push(conversa.usuarios[
-                        conversa.usuarios[0].usuario == usuario ? 1 : 0
-                    ].usuario);
+                    conversa.destinatario = conversa.usuarios[conversa.usuarios[0].usuario == usuario ? 1 : 0].usuario;
                 });
 
-                var usuariosConversa = Usuario.find({
-                    id: idsUsuarios
-                })
-                .then(function(usuarios) {
-                    return usuarios;
-                });
-
-                var contatosConversa = Contato.find({
-                    usuario: usuario,
-                    contato: idsUsuarios
-                })
-                .then(function(contatos) {
-                    return contatos
-                });
-
-                return [conversas, usuariosConversa, contatosConversa];
-            })
-            .spread(function(conversas, usuarios, contatos) {
-
-                usuarios = sails.util.indexBy(usuarios, 'id');
-                contatos = sails.util.indexBy(contatos, 'contato');
-
-                conversas.forEach(function(conversa) {
-                    var u = conversa.usuarios[conversa.usuarios[0].usuario == usuario ? 1 : 0].usuario;
-                    conversa.destinatario = usuarios[u];
-                    conversa.destinatario.isContato = typeof contatos[u] !== 'undefined';
-                    
-                    delete conversa.usuarios;
-                });
-                
                 return res.json(conversas);
             })
             .catch(function cbError(err) {
