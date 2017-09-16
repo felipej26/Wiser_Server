@@ -66,17 +66,29 @@ module.exports = {
             });
         }
 
+        var usuario = req.param('usuario');
+        var destinatario = req.param('destinatario');
+
         var query = 'SELECT * FROM conversa_usuario' +
-        ' WHERE usuario = ' + req.param('destinatario') + ' AND conversa IN (' +
+        ' WHERE usuario = ' + destinatario + ' AND conversa IN (' +
         '     SELECT conversa FROM conversa_usuario' +
-        '     WHERE usuario = ' + req.param('usuario') +
+        '     WHERE usuario = ' + usuario +
         ' );';
         
         ConversaUsuario.query(query, function cb(err, conversa) {
             if (err) { return res.serverError(err); }
             
             if (!conversa || conversa.length == 0) {
-                return res.notFound();
+                return adicionarConversa(usuario, destinatario, 0)
+                .then(function(conversa) {
+                    conversa.destinatario = destinatario;
+                    return res.json(conversa);
+                }).catch(function cbError(err) {
+                    return res.json(500, {
+                        result: 'BAD_REQUEST',
+                        reason: err
+                    });
+                });
             }
 
             Conversa.findOne({
@@ -105,40 +117,8 @@ module.exports = {
         var data = req.param('data');
         var mensagem = req.param('mensagem');
 
-        Conversa.findOrCreate({
-            id: idConversa
-        }).then(function (conversa) {
-
-            ConversaUsuario.findOrCreate({
-                conversa: conversa.id,
-                usuario: idUsuario
-            }, {
-                conversa: conversa.id,
-                usuario: idUsuario
-            }).then(function (conversa) {
-
-            }).catch(function cbError(err) {
-                return res.json(500, {
-                    result: 'BAD_REQUEST',
-                    reason: err
-                });
-            });
-
-            ConversaUsuario.findOrCreate({
-                conversa: conversa.id,
-                usuario: idDestinatario
-            }, {
-                conversa: conversa.id,
-                usuario: idDestinatario
-            }).then(function (conversa) {
-                
-            }).catch(function cbError(err) {
-                return res.json(500, {
-                    result: 'BAD_REQUEST',
-                    reason: err
-                });
-            });
-
+        adicionarConversa(idUsuario, idDestinatario, idConversa)
+        .then(function(conversa) {
             ConversaMensagem.create({
                 conversa: conversa.id,
                 usuario: idUsuario,
@@ -152,7 +132,6 @@ module.exports = {
                     reason: err
                 });
             });
-
         }).catch(function cbError(err) {
             return res.json(500, {
                 result: 'BAD_REQUEST',
@@ -162,7 +141,7 @@ module.exports = {
     },
 
     atualizarLidas: function(req, res) {
-        
+
         if (!req.param('conversa') || !req.param('usuario') || !req.param('mensagem')) {
             return res.json(400, {
                 result: 'BAD_REQUEST',
@@ -196,3 +175,38 @@ module.exports = {
     }
 };
 
+function adicionarConversa(usuario, destinatario, conversa) {
+
+    return Conversa.findOrCreate({
+        id: conversa
+    }).then(function (conversaEncontrada) {
+
+        ConversaUsuario.findOrCreate({
+            conversa: conversaEncontrada.id,
+            usuario: usuario
+        }, {
+            conversa: conversaEncontrada.id,
+            usuario: usuario
+        }).then(function (conversa) {
+
+        }).catch(function cbError(err) {
+            return err;
+        });
+
+        ConversaUsuario.findOrCreate({
+            conversa: conversaEncontrada.id,
+            usuario: destinatario
+        }, {
+            conversa: conversaEncontrada.id,
+            usuario: destinatario
+        }).then(function (conversa) {
+            
+        }).catch(function cbError(err) {
+            return err;
+        });
+        
+        return conversaEncontrada;
+    }).catch(function cbError(err) {
+        return err;
+    });
+}
