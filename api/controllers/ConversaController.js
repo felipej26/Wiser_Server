@@ -96,6 +96,7 @@ module.exports = {
             })
             .populate('mensagens')
             .then(function(c) {
+                c.destinatario = destinatario;
                 return res.json(c);
             });
         });
