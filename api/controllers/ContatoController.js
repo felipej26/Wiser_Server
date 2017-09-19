@@ -50,6 +50,7 @@ module.exports = {
             var contatosFormatados = [];
 
             contatos.forEach(function(contato) {
+                contato.contato.isContato = true;
                 contatosFormatados.push(contato.contato);
             });
             
