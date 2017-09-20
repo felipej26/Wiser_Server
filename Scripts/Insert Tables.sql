@@ -74,7 +74,7 @@ INSERT INTO `linguagem` VALUES
 ('es', 0, 0, 3);
 
 INSERT INTO `sistema` VALUES
-('0.0', 1);
+('0.0', '0', 1);
 
 /*
 INSERT INTO `contato` VALUES

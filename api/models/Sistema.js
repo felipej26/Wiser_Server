@@ -14,6 +14,11 @@ module.exports = {
     min_versao: {
       type: 'string',
       size: 20
+    },
+
+    min_versao_cache: {
+      type: 'string',
+      size: 20
     }
   }
 };

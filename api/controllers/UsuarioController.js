@@ -13,13 +13,11 @@ module.exports = {
             !req.param('data_nascimento') || 
             !req.param('facebook_id') || 
             !req.param('access_token') || 
-            !req.param('data_ultimo_acesso') || 
-            !req.param('latitude') || 
-            !req.param('longitude')) {
+            !req.param('data_ultimo_acesso')) {
             return res.json(400, {
                 result: 'BAD_REQUEST',
                 reason: 'Parametros invalidos (nome, primeiro_nome, data_nascimento, facebook_id, ' +
-                    'access_token, data_ultimo_acesso, latitude, longitude)'
+                    'access_token, data_ultimo_acesso)'
             });
         }
 
@@ -31,9 +29,7 @@ module.exports = {
             data_nascimento: req.param('data_nascimento'),
             facebook_id: facebook_id,
             access_token: req.param('access_token'),
-            data_ultimo_acesso: req.param('data_ultimo_acesso'),
-            latitude: req.param('latitude'),
-            longitude: req.param('longitude')
+            data_ultimo_acesso: req.param('data_ultimo_acesso')
         };
 
         Usuario.findOrCreate({
@@ -49,8 +45,6 @@ module.exports = {
                 data_nascimento: values.data_nascimento,
                 access_token: values.access_token,
                 data_ultimo_acesso: values.data_ultimo_acesso,
-                latitude: values.latitude,
-                longitude: values.longitude,
                 conta_ativa: true
             }).then(function (updatedUsuario) {
                 Usuario.findOne({

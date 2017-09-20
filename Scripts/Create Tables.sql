@@ -123,6 +123,7 @@ CREATE TABLE `linguagem` (
 
 CREATE TABLE `sistema` (
   `min_versao` varchar(20) DEFAULT NULL,
+  `min_versao_cache` varchar(20) DEFAULT NULL,
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB;

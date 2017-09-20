@@ -6,14 +6,14 @@
  */
 
 module.exports = {
-	getMinVersao: function(req, res) {
+	getVersoes: function(req, res) {
         Sistema.findOne({
             id: 1
         }).exec(function (err, versao){
             if (err) { return res.serverError(err); }
 
             if (!versao) {
-                return res.notFound('Could not find versao!.');
+                return res.notFound('Could not find versao!');
             }
             
             return res.json(versao);
