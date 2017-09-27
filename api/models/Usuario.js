@@ -44,13 +44,11 @@ module.exports = {
 		},
 		
 		latitude: {
-			type: 'float',
-			required: true
+			type: 'float'
 		},
 
 		longitude: {
-			type: 'float',
-			required: true
+			type: 'float'
 		},
 
 		idioma: {

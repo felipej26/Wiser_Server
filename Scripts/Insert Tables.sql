@@ -66,7 +66,13 @@ INSERT INTO `idioma` VALUES
 (1, 2, 1, 'Inglês', 5),
 (2, 2, 1, 'English', 6),
 (1, 3, 1, 'Espanhol', 7),
-(2, 3, 1, 'Spanish', 8);
+(2, 3, 1, 'Spanish', 8),
+(1, 4, 1, 'Francês', 9),
+(2, 4, 1, 'French', 10),
+(1, 5, 1, 'Japonês', 11),
+(2, 5, 1, 'Japanese', 12),
+(1, 6, 1, 'Italiano', 13),
+(2, 6, 1, 'Italian', 14);
 
 INSERT INTO `linguagem` VALUES
 ('pt', 1, 1, 1),
